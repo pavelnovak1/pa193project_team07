@@ -1,9 +1,11 @@
 mod extract_info;
 mod write_info;
 mod cert_info;
+mod versions;
+mod title;
+mod biblio;
 
 use std::env;
-use std::fs;
 use crate::extract_info::extract_info;
 
 fn main() {
