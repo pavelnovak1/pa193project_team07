@@ -22,9 +22,9 @@ impl Certificate{
     }
 }
 
-struct Versions {
-    eal : Vec<String>,
-    global_platform : Vec<String>,
+pub struct Versions {
+    pub eal : Vec<String>,
+    pub global_platform : Vec<String>,
     java_card : Vec<String>,
     sha : Vec<i32>,
     rsa : Vec<i32>,
@@ -33,8 +33,9 @@ struct Versions {
 }
 
 impl Versions{
-    fn new()->Versions{
-        return Versions{ eal: vec![],
+    pub fn new()->Versions{
+        return Versions{ 
+            eal: vec![],
             global_platform: vec![],
             java_card: vec![],
             sha: vec![],

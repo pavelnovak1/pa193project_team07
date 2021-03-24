@@ -1,24 +1,26 @@
 use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
-use crate::cert_info::Certificate;
+use crate::cert_info::*;
 use crate::versions::find_versions;
+use crate::title::find_title;
 
 pub(crate) fn extract_info(filename : &String) -> Certificate{
-    // let cert_text = fs::read_to_string(filename)
-    //     .expect("Something went wrong reading the file");
-    if let Ok(lines) = read_lines(filename) {
-        // TODO
-        for line in lines {
-            if let Ok(ip) = line {
-                println!("{}", ip);
-                find_versions(ip);
-            }
-        }
-        // let title = find_title(lines);
-        // let versions = find_versions(lines);
-        // let bibliography = find_biblio(lines);
+    let cert = std::fs::read_to_string(filename);
+    let cert_text: String;
+    match cert {
+        Ok(txt) => cert_text = txt,
+        Err(e) => {
+            println!("Error reading file {}: {}", filename, e);
+            panic!();
+        },
     }
+    //let mut title = String::new();
+    let versions: Versions;
+    //let mut bibliography: Vec<String> = vec![];
+
+    versions = find_versions(&cert_text);
+
     let certificate = Certificate::new();
     certificate
 
