@@ -16,10 +16,9 @@ pub(crate) fn extract_info(filename : &String) -> Certificate{
         },
     }
     //let mut title = String::new();
-    let versions: Versions;
     //let mut bibliography: Vec<String> = vec![];
 
-    versions = find_versions(&cert_text);
+    let versions = find_versions(&cert_text);
 
     let certificate = Certificate::new();
     certificate

@@ -25,11 +25,11 @@ impl Certificate{
 pub struct Versions {
     pub eal : Vec<String>,
     pub global_platform : Vec<String>,
-    java_card : Vec<String>,
-    sha : Vec<i32>,
-    rsa : Vec<i32>,
-    ecc : Vec<i32>,
-    des : Vec<String>,
+    pub java_card : Vec<String>,
+    pub sha : Vec<i32>,
+    pub rsa : Vec<i32>,
+    pub ecc : Vec<i32>,
+    pub des : Vec<String>,
 }
 
 impl Versions{
