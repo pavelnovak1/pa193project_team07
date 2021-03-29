@@ -19,12 +19,11 @@ pub fn find_versions(text : &String) -> Versions{
 
     result.eal = find_eal(&text);
     result.global_platform = find_gp(&text);
-    // find_java_card();
-    // find_sha();
-    // find_rsa();
-    // find_ecc();
-    // find_des;
-    result
+    result.java_card = find_java_card(&text);
+    result.sha = find_sha(&text);
+    result.rsa = find_rsa(&text);
+    result.ecc = find_ecc(&text);
+    result.des = find_des(&text);
 }
 
 /// Returns vector of strings containing all _unique_ and both sides trimmed pieces of text that fits to given regular expression in
@@ -67,7 +66,27 @@ fn find_eal(text : &String) -> Vec<String>{
 /// # Return 
 /// Vector of strings containing all unique global platform versions in certificate
 fn find_gp(text: &String) -> Vec<String>{
-    find(Regex::new(r"[Gg]lobal\s{0,1}[Pp]latform\s\d(\.\d)*").unwrap(), &text)
+    find(Regex::new(r"[Gg]lobal\s*[Pp]latform\s*\d(\.\d)*").unwrap(), &text)
+}
+
+fn find_java_card(text: &String) -> Vec<String>{
+    find(Regex::new(r"[Jj]ava\s*[Cc]ard\s*\d(\.\d)*").unwrap(), &text)
+}
+
+fn find_sha(text: &String) -> Vec<String>{
+    find(Regex::new(r"(SHA|sha)(\s*|-|_)?\d\d?\d?(\\\d\d\d)?").unwrap(), &text)
+}
+
+fn find_rsa(text: &String) -> Vec<String>{
+    find(Regex::new(r"(RSA|rsa)(\s*|-|_)?(\d\d\d\d|CRT|SignaturePKCS1|PSS)").unwrap(), &text)
+}
+
+fn find_ecc(text: &String) -> Vec<String>{
+    find(Regex::new(r"(ECC|ecc|ECDSA|ecdsa)(\s*|-|_)?\d\d\d\d?").unwrap(), &text)
+}
+
+fn find_des(text: &String) -> Vec<String>{
+    find(Regex::new(r"(([Tt]riple|T|3|[Ss]ingle|[Ss]imple)(\s*|-|_)?(DES|des))|((des|DES)3)").unwrap(), &text)
 }
 
 #[cfg(test)]
