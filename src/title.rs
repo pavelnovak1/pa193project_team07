@@ -84,7 +84,7 @@ pub fn find_title_security_target_after(text: &String) -> String {
     let (title_start_space, _) = text.split_at(result.end());
 
     result = find(
-        Regex::new(r"(^|\s)\s*").unwrap(),
+        Regex::new(r"(^|\s)\s*(PUBLIC)?\s*").unwrap(),
         &text,
     );
     let (_, title_start) = title_start_space.split_at(result.end());
@@ -94,6 +94,25 @@ pub fn find_title_security_target_after(text: &String) -> String {
         &title_start,
     );
     let (title, _) = title_start.split_at(result.start());
+
+    //result
+    replace_whitespace_with_space(title)
+}
+
+
+pub fn find_title_certification_report(text: &String) -> String {
+    let mut result = find(
+        Regex::new(r"(^|\s)(\w|\s)+Certification Report\s+Version \d{4}-\d+\s+").unwrap(),
+        &text,
+    );
+    let (_, title_from) = text.split_at(result.end());
+    println!("{}", title_from);
+
+    result = find(
+        Regex::new(r"\s+Sponsor( and developer)?:").unwrap(),
+        &title_from,
+    );
+    let (title, _) = title_from.split_at(result.start());
 
     //result
     replace_whitespace_with_space(title)
@@ -331,6 +350,292 @@ firmware identifier 80.301.05.1 and user guidance
 
 
 
+
+
+
+
+
+
+    #[test]
+    fn find_title_certification_report_test() {
+        let mut text = String::from("                                                                                                 TÜV Rheinland Nederland B.V.
+
+
+
+
+                                                                                                                                                          Certification Report
+Version 2018-1
+
+
+
+
+                                                                                                                                           Crypto Library V3.1.x on P6022y VB
+
+
+
+
+                                                                                                                  Sponsor and developer:           NXP Semiconductors Germany GmbH
+                                                                                                                                                   Business Unit Security & Connectivity
+                                                                                                                                                   Troplowitzstrasse 20, 22529 Hamburg
+                                                                                                                                                   Germany");
+        assert_eq!(find_title_certification_report(&text),String::from("Crypto Library V3.1.x on P6022y VB"));
+
+
+        text = String::from("                                                                                                 TÜV Rheinland Nederland B.V.
+
+
+
+
+                                                                                                                                                          Certification Report
+Version 2019-1
+
+
+
+
+                                                                                                                    CombICAO Applet in EAC configuration on ID-ONE Cosmo
+                                                                                                                                        V9 Essential
+
+
+
+                                                                                                                  Sponsor and developer:           IDEMIA");
+        assert_eq!(find_title_certification_report(&text),String::from("CombICAO Applet in EAC configuration on ID-ONE Cosmo V9 Essential"));
+
+        text = String::from("                                                                                                 TÜV Rheinland Nederland B.V.
+
+
+
+
+                                                                                                                                                          Certification Report
+Version 2020-2
+
+
+
+
+                                                                                                                                                                  JCOP 4 P71
+
+
+
+
+                                                                                                                  Sponsor and developer:           NXP Semiconductors Germany GmbH");
+        assert_eq!(find_title_certification_report(&text),String::from("JCOP 4 P71"));
+
+        text = String::from("                                                                                                 TÜV Rheinland Nederland B.V.
+
+
+
+
+                                                                                                                                                          Certification Report
+Version 2019-1
+
+
+
+
+                                                                                                                    CombICAO Applet in BAC and CA configuration on ID-ONE
+                                                                                                                                     Cosmo V9 Essential
+
+
+
+                                                                                                                  Sponsor and developer:           IDEMIA
+                                                       ");
+        assert_eq!(find_title_certification_report(&text),String::from("CombICAO Applet in BAC and CA configuration on ID-ONE Cosmo V9 Essential"));
+
+        text = String::from("                                                                                                 TÜV Rheinland Nederland B.V.
+
+
+
+
+                                                                                                                                                          Certification Report
+Version 2020-3
+
+
+
+
+                                                                                                                    NXP eDoc Suite v3.5 on JCOP4 P71 - cryptovision ePasslet
+                                                                                                                    Suite – Java Card applet configuration providing Machine
+                                                                                                                      Readable Travel Document with „ICAO Application”,
+                                                                                                                              Extended Access Control with PACE
+
+                                                                                                                  Sponsor:                         NXP Semiconductors Germany GmbH");
+        assert_eq!(find_title_certification_report(&text),String::from("NXP eDoc Suite v3.5 on JCOP4 P71 - cryptovision ePasslet Suite – Java Card applet configuration providing Machine Readable Travel Document with „ICAO Application”, Extended Access Control with PACE"));
+
+        text = String::from("                                                                                                 TÜV Rheinland Nederland B.V.
+
+
+
+
+                                                                                                                                                          Certification Report
+Version 2020-2
+
+
+
+
+                                                                                                                                                                   MF3D(H)x3
+
+
+
+
+                                                                                                                  Sponsor and developer:           NXP Semiconductors Germany GmbH");
+        assert_eq!(find_title_certification_report(&text),String::from("MF3D(H)x3"));
+
+        text = String::from("                                                                                                 TÜV Rheinland Nederland B.V.
+
+
+
+
+                                                                                                                                                          Certification Report
+Version 2019-4
+
+
+
+
+                                                                                                                                 NXP JCOP 5.2 on SN100.C58 Secure Element
+
+
+
+
+                                                                                                                  Sponsor and developer:           NXP Semiconductors GmbH");
+        assert_eq!(find_title_certification_report(&text),String::from("NXP JCOP 5.2 on SN100.C58 Secure Element"));
+
+        text = String::from(" Rheinland Nederland B.V.
+
+
+
+
+                                                                                                                                                          Certification Report
+Version 2020-2
+
+
+
+
+                                                                                                                                                              JCOP 4.7 SE051
+
+
+
+
+                                                                                                                  Sponsor and developer:           NXP Semiconductors Germany GmbH");
+        assert_eq!(find_title_certification_report(&text),String::from("JCOP 4.7 SE051"));
+
+        text = String::from("                                                                                                 TÜV Rheinland Nederland B.V.
+
+
+
+
+                                                                                                                                                          Certification Report
+Version 2020-2
+
+
+
+
+                                                                                                                                                       Voyager ePassport v2.20
+
+
+
+
+                                                                                                                  Sponsor and developer:           Infineon Technologies AG");
+        assert_eq!(find_title_certification_report(&text),String::from("Voyager ePassport v2.20"));
+
+        text = String::from("                                                                                                 TÜV Rheinland Nederland B.V.
+
+
+
+
+                                                                                                                                                          Certification Report
+Version 2020-2
+
+
+
+
+                                                                                                                                                          jePASS EAC V.1.1.4
+
+
+
+
+                                                                                                                  Sponsor and developer:           ST Microelectronics S.r.l");
+        assert_eq!(find_title_certification_report(&text),String::from("jePASS EAC V.1.1.4"));
+
+        text = String::from("                                                                                                 TÜV Rheinland Nederland B.V.
+
+
+
+
+                                                                                                                                                          Certification Report
+Version 2020-2
+
+
+
+
+                                                                                                                            JCOP 4.x on P73N2M0B0.2C2/2C6 Secure Element
+
+
+
+
+                                                                                                                  Sponsor and developer:           NXP Semiconductors GmbH");
+        assert_eq!(find_title_certification_report(&text),String::from("JCOP 4.x on P73N2M0B0.2C2/2C6 Secure Element"));
+        text = String::from("                                                                                                 TÜV Rheinland Nederland B.V.
+
+
+
+
+                                                                                                                                                          Certification Report
+Version 2020-3
+
+
+
+
+                                                                                                                            SN200 Series - Secure Element with Crypto Library
+                                                                                                                                           SN200_SE B1.1 C04
+
+
+
+                                                                                                                  Sponsor and developer:           NXP Semiconductors Germany GmbH");
+        assert_eq!(find_title_certification_report(&text),String::from("SN200 Series - Secure Element with Crypto Library SN200_SE B1.1 C04"));
+
+        text = String::from("                                                                                                 TÜV Rheinland Nederland B.V.
+
+
+
+
+                                                                                                                                                          Certification Report
+Version 2020-3
+
+
+
+
+                                                                                                                        NXP eDoc Suite v3.5 on JCOP4 71 - cryptovision ePasslet
+                                                                                                                        Suite – Java Card applet configuration providing Secure
+                                                                                                                           Signature Creation Device with key import (SSCD)
+
+
+                                                                                                                  Sponsor:                         NXP Semiconductors Germany GmbH
+                                                                                                                                                   Troplowitzstrasse 20");
+        assert_eq!(find_title_certification_report(&text),String::from("NXP eDoc Suite v3.5 on JCOP4 71 - cryptovision ePasslet Suite – Java Card applet configuration providing Secure Signature Creation Device with key import (SSCD)"));
+
+        text = String::from("                                                                                                 TÜV Rheinland Nederland B.V.
+
+
+
+
+                                                                                                                                                          Certification Report
+Version 2020-3
+
+
+
+
+                                                                                                                        NXP eDoc Suite v3.5 on JCOP4 71 - cryptovision ePasslet
+                                                                                                                        Suite – Java Card applet configuration providing Secure
+                                                                                                                           Signature Creation Device with key import (SSCD)
+
+
+                                                                                                                  Sponsor:                         NXP Semiconductors Germany GmbH
+                                                                                                                                                   Troplowitzstrasse 20");
+        assert_eq!(find_title_certification_report(&text),String::from("NXP eDoc S"));
+
+    }
+
+
+
+
+
     #[test]
     fn find_title_security_target_lite_before_test() {
         let mut text = String::from("   Security Target Lite
@@ -455,10 +760,6 @@ Revision: v4.0");
         assert_eq!(find_title_security_target_after(&text),String::from("IFX_CCI_00002Dh, IFX_CCI_000039h, IFX_CCI_00003Ah, IFX_CCI_000044h, IFX_CCI_000045h, IFX_CCI_000046h, IFX_CCI_000047h, IFX_CCI_000048h, IFX_CCI_000049h, IFX_CCI_00004Ah, IFX_CCI_00004Bh, IFX_CCI_00004Ch, IFX_CCI_00004Dh, IFX_CCI_00004Eh T11"));
 
 
-
-
-
-
         text = String::from("  NXP eDoc Suite v3.5 on JCOP4 P71 –
       cryptovision ePasslet Suite –
 Java Card applet configuration providing
@@ -469,8 +770,6 @@ Java Card applet configuration providing
                       NSCIB-CC-00229286");
 
         assert_eq!(find_title_security_target_after(&text),String::from("NXP eDoc Suite v3.5 on JCOP4 P71 – cryptovision ePasslet Suite – Java Card applet configuration providing Secure Signature Creation Device with Key generation (SSCD)"));
-
-
 
 
 
