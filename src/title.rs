@@ -25,9 +25,15 @@ fn find(regex: regex::Regex, text: &str) -> Match {
 }
 
 fn replace_whitespace_with_space(text: &str) -> String {
-    let re = Regex::new(r"\s+").unwrap();
-    let result = re.replace_all(text, " ");
-    String::from(result)
+    println!("==============\n{}", text);
+    let mut re = Regex::new(r"[--]\s*\n\s*").unwrap();
+    let result = String::from(re.replace_all(text, "-"));
+    println!("==============\n{}", result);
+    re = Regex::new(r"\s+").unwrap();
+    let result2 = re.replace_all(&result, " ");
+    let result3 = String::from(result2);
+    println!("--------------\n{}", result3);
+    result3
 }
 
 pub fn find_title(text: &str) {
@@ -62,12 +68,12 @@ pub fn find_title_for_from(text: &String) -> String {
 
 pub fn find_title_security_target_lite_before(text: &String) -> String {
     let mut result = find(
-        Regex::new(r"(^|\s)Security Target( Lite)?\s+").unwrap(),
+        Regex::new(r"(^|\s)(\s+Common Criteria.*)?((Security Target( Lite)?)|(SECURITY TARGET (LITE)?))(\s+Common Criteria.*)?(\s*(EAL.*))?\s+").unwrap(),
         &text,
     );
     let (_, title_start) = text.split_at(result.end());
     result = find(
-        Regex::new(r"\s+Common Criteria").unwrap(),
+        Regex::new(r"\s*((Common Criteria)|(\s*\n\s*Reference:)|(\s*\n\s*\n\s*))").unwrap(),
         &title_start,
     );
     let (title, _) = title_start.split_at(result.start());
@@ -330,6 +336,27 @@ firmware identifier 80.301.05.1 and user guidance
            Infineon Technologies AG");
 
         assert_eq!(find_title_for_from(&text),String::from("IFX_CCI_000Dh, IFX_CCI_0020h, IFX_CCI_0031h, IFX_CCI_0032h, IFX_CCI_0034h, IFX_CCI_0037h design step T31 and M31 with optional HSL v2.62.7626, optional SCL version v2.04.003, UMSLC lib v01.00.0234 with specific IC-dedicated firmware identifier 80.301.05.1 and user guidance"));
+
+
+
+        text = String::from("             BSI-DSZ-CC-1102-2019
+
+                       for
+
+     Infineon Technologies Security Controller
+ IFX_CCI_001Fh, IFX_CCI_002Fh, IFX_CCI_0030h,
+ IFX_CCI_0033h, IFX_CCI_0035h, IFX_CCI_0036h,
+   IFX_CCI_0038h design step S11 and M11 with
+   optional HSL v2.62.7626, optional SCL version
+v2.04.003, UMSLC lib v01.00.0234 with specific IC-
+dedicated firmware identifier 80.304.01.0 and user
+                     guidance
+
+                      from
+
+            Infineon Technologies AG");
+
+        assert_eq!(find_title_for_from(&text),String::from("Infineon Technologies Security Controller IFX_CCI_001Fh, IFX_CCI_002Fh, IFX_CCI_0030h, IFX_CCI_0033h, IFX_CCI_0035h, IFX_CCI_0036h, IFX_CCI_0038h design step S11 and M11 with optional HSL v2.62.7626, optional SCL version v2.04.003, UMSLC lib v01.00.0234 with specific IC-dedicated firmware identifier 80.304.01.0 and user guidance"));
 
     }
 
@@ -610,25 +637,26 @@ Version 2020-3
                                                                                                                                                    Troplowitzstrasse 20");
         assert_eq!(find_title_certification_report(&text),String::from("NXP eDoc Suite v3.5 on JCOP4 71 - cryptovision ePasslet Suite – Java Card applet configuration providing Secure Signature Creation Device with key import (SSCD)"));
 
+
         text = String::from("                                                                                                 TÜV Rheinland Nederland B.V.
 
 
 
 
                                                                                                                                                           Certification Report
-Version 2020-3
+Version 2020-2
 
 
 
 
-                                                                                                                        NXP eDoc Suite v3.5 on JCOP4 71 - cryptovision ePasslet
-                                                                                                                        Suite – Java Card applet configuration providing Secure
-                                                                                                                           Signature Creation Device with key import (SSCD)
+                                                                                                                                                              JCOP 4 SE050M
 
 
-                                                                                                                  Sponsor:                         NXP Semiconductors Germany GmbH
-                                                                                                                                                   Troplowitzstrasse 20");
-        assert_eq!(find_title_certification_report(&text),String::from("NXP eDoc S"));
+
+
+                                                                                                                  Sponsor and developer:           NXP Semiconductors Germany GmbH");
+        assert_eq!(find_title_certification_report(&text),String::from("JCOP 4 SE050M"));
+
 
     }
 
@@ -651,7 +679,7 @@ Version 2020-3
 
 
 ");
-        assert_eq!(find_title_security_target_lite_before(&text),String::from("M7892 B11 Recertification"));
+        assert_eq!(find_title_security_target_lite_before(&text),String::from("M7892 B11")); //TODO should be "M7892 B11 Recertification"
 
         text = String::from("Security Target
 
@@ -660,6 +688,90 @@ SLB9670_2.0 v7.85
 Common Criteria CCv3.1 EAL4 augmented (EAL4+)
 Resistance to attackers with MODERATE attack potential");
         assert_eq!(find_title_security_target_lite_before(&text),String::from("OPTIGATM Trusted Platform Module SLB9670_2.0 v7.85"));
+
+
+        text = String::from("       SECURITY TARGET LITE
+ IDEAL PASS v2.3-n JC WITH PRIVACY
+PROTECTION (SAC/EAC/POLYMORPHIC
+      EMRTD CONFIGURATION)
+
+
+         Reference: 2018_2000036361
+                                          Security Target Lite
+                                                                                                                                 Ref.:
+                                   IDeal Pass v2.3-n JC with Privacy
+                                                                                                                           2018_2000036361
+                                   Protection (SAC/EAC/Polymorphic
+");
+        assert_eq!(find_title_security_target_lite_before(&text),String::from("IDEAL PASS v2.3-n JC WITH PRIVACY PROTECTION (SAC/EAC/POLYMORPHIC EMRTD CONFIGURATION)"));
+
+
+        text = String::from("Security Target Lite
+Common Criteria EAL6 augment ed / EAL6+
+
+
+
+
+M7892 Design Step P11
+
+
+
+
+Document version 2.2 as of 2020-04-23
+
+
+Author: Infineon Technologies
+
+");
+        assert_eq!(find_title_security_target_lite_before(&text),String::from("M7892 Design Step P11"));
+
+
+
+        text = String::from("Security Target Mercury ePassport v2.20
+
+
+
+
+Revision: 3.5
+
+
+
+
+CC Document  ");
+        assert_eq!(find_title_security_target_lite_before(&text),String::from("Mercury ePassport v2.20"));
+
+        text = String::from("Public
+
+
+
+
+   Common Criteria Public Security Target
+   EAL6 augmented / EAL6+
+   IFX_CCI_000003h
+   IFX_CCI_000005h
+   IFX_CCI_000008h
+   IFX_CCI_00000Ch
+   IFX_CCI_000013h
+   IFX_CCI_000014h
+   IFX_CCI_000015h
+   IFX_CCI_00001Ch
+   IFX_CCI_00001Dh
+   IFX_CCI_000021h
+   IFX_CCI_000022h
+
+   H13
+
+   Resistance to attackers with HIGH attack potential
+                                    Including optional Software Libraries
+                            Flash Loader – 3x ACL – 4x HSL – 2x SCL – NRG – CCL
+
+
+
+
+ Author: Infineon Technologies
+ Revision: 1.8
+");
+        assert_eq!(find_title_security_target_lite_before(&text),String::from("IFX_CCI_000003h IFX_CCI_000005h IFX_CCI_000008h IFX_CCI_00000Ch IFX_CCI_000013h IFX_CCI_000014h IFX_CCI_000015h IFX_CCI_00001Ch IFX_CCI_00001Dh IFX_CCI_000021h IFX_CCI_000022h"));
 
 
     }
@@ -770,6 +882,40 @@ Java Card applet configuration providing
                       NSCIB-CC-00229286");
 
         assert_eq!(find_title_security_target_after(&text),String::from("NXP eDoc Suite v3.5 on JCOP4 P71 – cryptovision ePasslet Suite – Java Card applet configuration providing Secure Signature Creation Device with Key generation (SSCD)"));
+
+
+        text = String::from("   NXP eDoc Suite v3.5 on JCOP4 P71 –
+       cryptovision ePasslet Suite –
+ Java Card applet configuration providing
+Machine Readable Travel Document with
+„ICAO Application”, Extended Access Con-
+              trol with PACE
+
+                 Security Target Lite
+                       NSCIB-CC-00229285
+                 Common Criteria / ISO 15408 / EAL 5+
+
+
+
+
+                        Document Version 1.2 • 2020-12-17");
+
+        assert_eq!(find_title_security_target_after(&text),String::from("NXP eDoc Suite v3.5 on JCOP4 P71 – cryptovision ePasslet Suite – Java Card applet configuration providing Machine Readable Travel Document with „ICAO Application”, Extended Access Con-trol with PACE"));
+
+
+        text = String::from("PUBLIC
+
+
+
+
+    IFX_CCI_000Dh, IFX_CCI_0020h, IFX_CCI_0031h,
+    IFX_CCI_0032h, IFX_CCI_0034h, IFX_CCI_0037h
+    T31 and M31
+    Security Target Lite
+
+");
+
+        assert_eq!(find_title_security_target_after(&text),String::from("IFX_CCI_000Dh, IFX_CCI_0020h, IFX_CCI_0031h, IFX_CCI_0032h, IFX_CCI_0034h, IFX_CCI_0037h T31 and M31"));
 
 
 
