@@ -4,9 +4,9 @@ use regex::Regex;
 pub fn find_biblio(text : &String) -> HashMap<String, String>{
     let mut biblio = HashMap::<String, String>::new();
     let mut results = HashSet::<String>::new();
-    let regexBiblio = Regex::new(r"\d{1,2}\.{0,1}\s+Bibliography\s+[^\.](?s:.)*").unwrap();
+    let regexBiblio = Regex::new(r"\d{1,2}\.{0,1}\s+Bibliography\s*[^\.\d\s](?s:.)*").unwrap();
     let regexLiterature = Regex::new(r"\d{1,2}\.{0,1}\s+(Referenced){0,1}[ ]{0,1}Literature\s+[^\.](?s:.)*").unwrap();
-    let regexEntry = Regex::new(r"\[[^\]]+\]\s+([^\[\n]+\n)+").unwrap();
+    let regexEntry = Regex::new(r"(?m)(^|\s)\[[^\]]+\]\s+([^\[\n]+\n)+").unwrap();
 
     if regexBiblio.is_match(&text) {
         results = regexBiblio.find_iter(&text)
@@ -22,7 +22,8 @@ pub fn find_biblio(text : &String) -> HashMap<String, String>{
     }
 
     for i in results {
-        let regexCaptures = Regex::new(r"(\[[^\]]+\])\s+([[:alpha:]]([^\[\n]+\n)+)").unwrap();
+        //println!("{}", &i);
+        let regexCaptures = Regex::new(r"(\[[^\]]+\])\s+(([^\[\n]+\n)+)").unwrap();
         for name in regexEntry.find_iter(&i) {
             
             let caps = match regexCaptures.captures(name.as_str()) { 
@@ -31,15 +32,20 @@ pub fn find_biblio(text : &String) -> HashMap<String, String>{
             };
             let name = remove_whitespaces(String::from(caps.get(1).unwrap().as_str()));
             let content = remove_whitespaces(String::from(caps.get(2).unwrap().as_str()));
-            biblio.insert( name.to_string(), content.to_string());
+            if !name.to_string().is_empty() {
+                biblio.insert( name.to_string(), content.to_string());
+            }
         }
     }
+    //for (k, v) in &biblio {
+    //    println!("{} {}", k.as_str(), v.as_str());
+    //}
     biblio
 }
 
 fn remove_whitespaces(text: String) -> String {
     let regexMultipleSpaces = Regex::new(r"\s+").unwrap();
-    let regexDashNewLine = Regex::new(r"-\s+").unwrap();
+    let regexDashNewLine = Regex::new(r"-\n\s+").unwrap();
     let mut t = regexDashNewLine.replace_all(&text, "-").to_string();
     t = regexMultipleSpaces.replace_all(&t, " ").to_string().trim().to_string();
     t
@@ -76,12 +82,16 @@ mod tests {
             let json = std::fs::read_to_string(&p).unwrap();
 
             let result = find_biblio(&txt);
+            println!("Problems in {} file", &p);
 
             for (k, v) in &result {
-                assert!(json.contains(&format!("\"{}\": \"{}\"", k.as_str(), v.as_str()).to_string()), "Json file {} does not contain: \"{}\": \"{}\". {} files were successfully tested.", &p, k.as_str(), v.as_str(), i);
+                if(!json.contains(&format!("\"{}\": \"{}\"", k.as_str(), v.as_str()).to_string())){
+                    println!("\"{}\": \"{}\"", k.as_str(), v.as_str());
+                }
             }
             i = i+1;
         }
+        panic!("");
     }
 }
  
