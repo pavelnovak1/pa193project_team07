@@ -15,8 +15,7 @@ fn replace_whitespace_with_space(text: &str) -> String {
     result3
 }
 
-s
-pub fn find_title_certification_report(text: &str) -> Option<String> {
+fn find_title_certification_report(text: &str) -> Option<String> {
     let regex_cap_for_from = Regex::new(r"(?:^|\s)(?:\w|\s)+Certification Report\s+Version \d{4}-\d+\s+(?P<title>(.*|\s)*[^\s])\s+Sponsor(?: and developer)?:").unwrap();
     let caps = regex_cap_for_from.captures(text)?;
     let title = caps.name("title").unwrap().as_str();
@@ -24,7 +23,7 @@ pub fn find_title_certification_report(text: &str) -> Option<String> {
 }
 
 
-pub fn find_title_for_from(text: &str) -> Option<String> {
+fn find_title_for_from(text: &str) -> Option<String> {
     let regex_cap_for_from =
         Regex::new(r"(?:^|\s)\n\s*for\s*\n\s*\n\s*(?P<title>(.*|\s)*.)\s*\n\s*\n\s*from\s*\n")
             .unwrap();
@@ -34,7 +33,7 @@ pub fn find_title_for_from(text: &str) -> Option<String> {
 }
 
 
-pub fn find_title_security_target_lite_before(text: &str) -> Option<String> {
+fn find_title_security_target_lite_before(text: &str) -> Option<String> {
     let regex_sec_target = Regex::new(r"(?:^|(?:\s*\n\s*\n\s*\n))\s*(?:\s+Common Criteria.*)?(?:(?:Security Target(?: Lite)?)|(?:SECURITY TARGET (?:LITE)?))(?:\s+Common Criteria.*)?(?:\s*(?:EAL.*))?\s+").unwrap();
     let mut result = regex_sec_target.find(&text)?;
     let (_, title_start) = text.split_at(result.end());
@@ -48,7 +47,7 @@ pub fn find_title_security_target_lite_before(text: &str) -> Option<String> {
 }
 
 
-pub fn find_title_security_target_after(text: &str) -> Option<String> {
+fn find_title_security_target_after(text: &str) -> Option<String> {
     let regex_cap_for_from =
         Regex::new(r"(?:^|\s)\s*(?:STMicroelectronics)?(?:PUBLIC)?\s*(?P<title>(.|\s)+[^\s])\s*Security Target\s+")
             .unwrap();
@@ -58,7 +57,7 @@ pub fn find_title_security_target_after(text: &str) -> Option<String> {
 }
 
 
-pub fn find_title_first_lines(text: &str) -> Option<String> {
+fn find_title_first_lines(text: &str) -> Option<String> {
     let regex_cap_for_from =
         Regex::new(r"(?:^|\s)\s*(?P<title>[^\s](.|\s)+[^\s])\s*\n\s*\n\s*\n")
             .unwrap();
@@ -497,7 +496,7 @@ CC Document  ",
     #[test]
     fn find_title_security_target_after_test() {
 
-        text = String::from(
+        let mut text = String::from(
             "  NXP Secure Smart Card
   Controller P6022y VB
   Security Target Lite
@@ -673,8 +672,8 @@ Java Card applet configuration providing
     }
 
     #[test]
-    fn find_title_security_target_after_test() {
-        text = String::from("ePassport configuration of SECORA™ ID S Infineon Applet Collection - eMRTD V1.0
+    fn find_title_first_lines_test() {
+        let text = String::from("ePassport configuration of SECORA™ ID S Infineon Applet Collection - eMRTD V1.0
 
 
 
