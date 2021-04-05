@@ -1,7 +1,9 @@
-pub(crate) struct Certificate {
+use std::collections::HashMap;
+
+pub(crate) struct Certificate {    
     title : String,
     versions : Versions,
-    bibliography : Vec<Vec<String>>,
+    bibliography : Vec<(String, String)>,
 }
 
 impl Certificate{
