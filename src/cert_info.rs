@@ -3,7 +3,7 @@ use std::collections::HashMap;
 pub(crate) struct Certificate {    
     title : String,
     versions : Versions,
-    bibliography : HashMap<String, String>,
+    bibliography : Vec<(String, String)>,
 }
 
 impl Certificate{
@@ -19,7 +19,7 @@ impl Certificate{
                 ecc: vec![],
                 des: vec![]
             },
-            bibliography: HashMap::new()
+            bibliography: vec![]
         };
     }
 }
