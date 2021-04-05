@@ -6,7 +6,7 @@ use crate::versions::find_versions;
 use crate::title::find_title;
 use crate::biblio::find_biblio;
 
-pub(crate) fn extract_info(filename : &String) -> Certificate{
+pub(crate) fn extract_info(filename: &String) -> Certificate {
     let cert = std::fs::read_to_string(filename);
     let cert_text: String;
     match cert {
@@ -14,10 +14,10 @@ pub(crate) fn extract_info(filename : &String) -> Certificate{
         Err(e) => {
             println!("Error reading file {}: {}", filename, e);
             panic!();
-        },
+        }
     }
-    //let mut title = String::new();
 
+    let title = find_title(&cert_text);
     let versions = find_versions(&cert_text);
     let biblio = find_biblio(&cert_text);
     let certificate = Certificate::new();
