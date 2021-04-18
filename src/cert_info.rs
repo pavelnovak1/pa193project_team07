@@ -47,3 +47,10 @@ impl Versions{
         };
     }
 }
+
+
+pub struct Revision {
+    pub version: String,
+    pub date: String,
+    pub description: String,
+}
