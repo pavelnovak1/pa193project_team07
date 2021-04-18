@@ -92,7 +92,7 @@ fn find_ecc(text: &String) -> Vec<String>{
 
 fn find_des(text: &String) -> Vec<String>{
     find(Regex::new(r"(([Tt]riple|T|3|[Ss]ingle|[Ss]imple)(\s*|-|_)?(DES|des))|((des|DES)3)").unwrap(), &text)
-
+}
 
 #[cfg(test)]
 mod tests {
