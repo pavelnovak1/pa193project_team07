@@ -28,9 +28,9 @@ pub struct Versions {
     pub eal : Vec<String>,
     pub global_platform : Vec<String>,
     pub java_card : Vec<String>,
-    pub sha : Vec<i32>,
-    pub rsa : Vec<i32>,
-    pub ecc : Vec<i32>,
+    pub sha : Vec<String>,
+    pub rsa : Vec<String>,
+    pub ecc : Vec<String>,
     pub des : Vec<String>,
 }
 
