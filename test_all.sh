@@ -1,5 +1,5 @@
 #! /bin/bash
-treshold=25
+treshold=30
 results=()
 worst=()
 worst_points=()
