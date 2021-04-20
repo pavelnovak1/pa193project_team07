@@ -1,14 +1,18 @@
 use std::collections::HashMap;
 
-pub(crate) struct Certificate {    
-    title : String,
-    versions : Versions,
-    bibliography : Vec<(String, String)>,
+use regex::Captures;
+
+use crate::tools;
+
+pub(crate) struct Certificate {
+    title: String,
+    versions: Versions,
+    bibliography: Vec<(String, String)>,
 }
 
-impl Certificate{
-    pub(crate) fn new() -> Certificate{
-        return Certificate{
+impl Certificate {
+    pub(crate) fn new() -> Certificate {
+        return Certificate {
             title: "".to_string(),
             versions: Versions {
                 eal: vec![],
@@ -53,4 +57,23 @@ pub struct Revision {
     pub version: String,
     pub date: String,
     pub description: String,
+}
+
+impl Revision {
+    //TODO prejmenovat
+    pub fn new(capture: &Captures) -> Revision {
+        let version = match capture.name("rev") {
+            Some(_) => capture["rev"].to_string(),
+            None => "".to_string()
+        };
+        let date = match capture.name("date") {
+            Some(_) => capture["date"].to_string(),
+            None => "".to_string()
+        };
+        let description = match capture.name("info") {
+            Some(_) => tools::replace_whitespace_with_space(&capture["info"].to_string()),
+            None => "".to_string()
+        };
+        Revision { version, date, description }
+    }
 }
