@@ -33,6 +33,35 @@ for (( j=0; j<$len; j++ )); do
 	echo "${worst_points[$j]}"
 done
 
+echo "test_dataset/0939V3b_pdf.txt - 14pts:"
+echo "Problems: Title, Biblio (Numbers)"
+echo "test_dataset/1019V2b_pdf.txt - 8pts:"
+echo "Problems: Title, Biblio (Numbers)"
+echo "test_dataset/1022b_pdf.txt - 13pts:"
+echo "Problems: Title, Biblio (References missing)"
+echo "test_dataset/1040b_pdf.txt - 13pts:"
+echo "Problems: Title, Biblio (References missing)"
+echo "test_dataset/1059b_pdf.txt - 8pts:"
+echo "Problems: Title, Biblio (Numbers)"
+echo "test_dataset/1107b_pdf.txt - 7pts:"
+echo "Problems: Versions, Biblio (References)"
+echo "test_dataset/anssi-cible-cc-2020_72en.txt - 16pts"
+echo "Problems: Title, Biblio (References missing)"
+echo "test_dataset/NSCIB-CC_0075541-ST.txt - 11pts"
+echo "Problems: Title"
+echo "test_dataset/NSCIB-CC-0095534-STLite.txt - 13pts"
+echo "Problems: Title, Biblio (Number)"
+echo "test_dataset/NSCIB-CC-0145426-ST_rev_C-final.txt - 11pts"
+echo "Problems: Title, Biblio (REFERENCED LITERATURE)"
+echo "test_dataset/nscib-cc-0229285eac-stv1.2.txt"
+echo "Problems: Title, Biblio (references)"
+echo "test_dataset/nscib-cc-0229286sscdkeygen-stv1.2.txt"
+echo "Problems: Title, Biblio (references)"
+echo "test_dataset/NSCIB-CC-0229287(SSCDkeyImp)-STv1.2.txt"
+echo "Problems: Title, Biblio (references)"
 
 
-	
+
+
+
+	 
