@@ -21,8 +21,10 @@ for filename in test_dataset/*.txt; do
 	i=$((i+1))
 done
 rm -f tmp.json
+echo "=================================="
 echo "Total files processed: $i"
-echo "Average: $((sum/i))"
+echo "Average points per file: $((sum/i))"
+echo "=================================="
 echo "Worst results ( points < $treshold ):"
 
 len=${#worst[@]}
