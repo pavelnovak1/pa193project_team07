@@ -4,8 +4,8 @@ use regex::Regex;
 pub fn find_biblio(text : &String) -> HashMap<String, String> {
     let mut bibliography_result = HashMap::<String, String>::new();
     let mut bibliography_section = HashSet::<String>::new();
-    let regex_biblio = Regex::new(r"\d{1,2}\.{0,1}\s+Bibliography\s*[^\.\d\s](?s:.)*").unwrap();
-    let regex_literature = Regex::new(r"\d{1,2}\.{0,1}\s+(Referenced){0,1}[ ]{0,1}Literature\s+[^\.](?s:.)*").unwrap();
+    let regex_biblio = Regex::new(r"\d{1,2}\.{0,1}\s+Bibliography[^\.\d\s]*(?s:.)*").unwrap();
+    let regex_literature = Regex::new(r"\d{1,2}\.{0,1}\s+(Referenced){0,1}[ ]{0,1}Literature[^\.\d\s]*(?s:.)*").unwrap();
     let regex_biblio_entry = Regex::new(r"(?m)(^|\s)\[[^\]]+\]\s+([^\[\n]+\n)+").unwrap();
     if regex_biblio.is_match(&text) {
         bibliography_section = regex_biblio.find_iter(&text)
