@@ -67,7 +67,7 @@ impl Revision {
             None => "".to_string()
         };
         let date = match capture.name("date") {
-            Some(_) => capture["date"].to_string(),
+            Some(_) => tools::format_date(&capture["date"]),
             None => "".to_string()
         };
         let description = match capture.name("info") {

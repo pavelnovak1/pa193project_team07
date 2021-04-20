@@ -3,28 +3,40 @@ use regex::Regex;
 
 use crate::cert_info::Revision;
 
-fn replace_whitespace_with_space(text: &str) -> String {
-    let mut re = Regex::new(r"[--]\s*\n\s*").unwrap();
-    let result = String::from(re.replace_all(text, "-"));
-    re = Regex::new(r"\s+").unwrap();
-    let result2 = re.replace_all(&result, " ");
-    re = Regex::new(r"\s+$").unwrap();
-    let result3 = re.replace_all(&result2, "");
-    let result4 = String::from(result3);
-    result4
+// TODO uklidit kod
+
+
+fn find_and_get_revision_entries(regex_version_entry: Regex, regex_version_entry_multiline: Regex, version_to_parse: &&str) -> Option<Vec<Revision>> {
+    let mut res1 = regex_version_entry.find(version_to_parse)?;
+    let mut res2 = regex_version_entry.find_at(version_to_parse, res1.end());
+
+    let mut revisions = Vec::new();
+    while res2 != None {
+        let unwrapped = res2.unwrap();
+        let substring_with_revision_entry = &version_to_parse[res1.start()..unwrapped.start() - 1];
+        res1 = unwrapped;
+        res2 = regex_version_entry.find_at(version_to_parse, res1.end());
+
+        let cap = regex_version_entry_multiline.captures(substring_with_revision_entry)?;
+        revisions.push(Revision::new(&cap));
+    }
+
+    let substring_with_revision_entry = &version_to_parse[res1.start()..];
+    let cap = regex_version_entry_multiline.captures(substring_with_revision_entry)?;
+    revisions.push(Revision::new(&cap));
+    Some(revisions)
 }
 
 
-// TODO create function to change date to other format and use it everywhere
-
-pub fn find_version_control(text: &str) -> Option<Vec<Revision>> {
+fn find_version_control(text: &str) -> Option<Vec<Revision>> {
     let regex_version_start =
         Regex::new(r"Version Control\s+Version\s+Date\s+Author\s+Changes to Previous Version\s+")
             .unwrap();
     let regex_version_end =
         Regex::new(r"\s*\n\s*\n\s*\n")
             .unwrap();
-    let regex_version_entry = Regex::new(r"(?P<rev>[\w\.]+) +(?P<date>[\d\-]+) +([\w ]+)   +(?P<info>[\w\- \.]+)").unwrap();
+    let regex_version_entry = Regex::new(r"(?P<rev>[\w\.]+) +(?P<date>[\d\-]+) +([\w ]+)   +(?P<info>.+)").unwrap();
+    let regex_version_entry_multiline = Regex::new(r"(?P<rev>[\w\.]+) +(?P<date>[\d\-]+) +([\w ]+)   +(?P<info>.+(\n {10,25}.+)*)").unwrap();
 
     let mut version_start = regex_version_start.find(&text)?;
     println!("{}, {}\n", version_start.start(), version_start.end());
@@ -33,14 +45,8 @@ pub fn find_version_control(text: &str) -> Option<Vec<Revision>> {
     let version_end = regex_version_end.find(version_start_text)?;
     let (version_to_parse, _) = version_start_text.split_at(version_end.start());
 
-    println!("{:?}\n", version_to_parse);
-    let mut revisions = Vec::new();
-    for cap in regex_version_entry.captures_iter(version_to_parse) {
-        //println!("Rev: {:?},\n Date: {:?},\n  Info: {:?}\n\n", cap.name("rev"), cap.name("date"), cap.name("info"));
-        println!("Rev: {:?},\n Date: {:?},\n  Info: {:?}\n\n", &cap["rev"], &cap["date"], &cap["info"]);
-        revisions.push(Revision{ version: cap["rev"].to_string(), date: cap["date"].to_string(), description: cap["info"].to_string() })
-    }
-    Some(revisions)
+    let revisions = find_and_get_revision_entries(regex_version_entry, regex_version_entry_multiline, &version_to_parse);
+    revisions
 }
 
 
@@ -64,27 +70,6 @@ fn find_revision_history_end(text: &str) -> Option<Vec<Revision>> {
     revisions
 }
 
-fn find_and_get_revision_entries(regex_version_entry: Regex, regex_version_entry_multiline: Regex, version_to_parse: &&str) -> Option<Vec<Revision>> {
-    let mut res1 = regex_version_entry.find(version_to_parse)?;
-    let mut res2 = regex_version_entry.find_at(version_to_parse, res1.end());
-
-    let mut revisions = Vec::new();
-    while res2 != None {
-        let unwrapped = res2.unwrap();
-        let substring_with_revision_entry = &version_to_parse[res1.start()..unwrapped.start() - 1];
-        res1 = unwrapped;
-        res2 = regex_version_entry.find_at(version_to_parse, res1.end());
-
-        let cap = regex_version_entry_multiline.captures(substring_with_revision_entry)?;
-        //revisions.push(Revision { version: cap["rev"].to_string(), date: cap.name("date").to_string(), description: replace_whitespace_with_space(&cap["info"].to_string()) });
-        revisions.push(Revision::new(&cap));
-    }
-
-    let substring_with_revision_entry = &version_to_parse[res1.start()..];
-    let cap = regex_version_entry_multiline.captures(substring_with_revision_entry)?;
-    revisions.push(Revision::new(&cap));
-    Some(revisions)
-}
 
 
 
@@ -94,7 +79,7 @@ pub fn find_revision_history_date_version_info(text: &str) -> Option<Vec<Revisio
             .unwrap();
     let regex_version_end =
         Regex::new(r"\s*\n\s*\n\s*\n")
-            .unwrap(); //TODO oddelat tecku v datumu
+            .unwrap();
     let regex_version_entry = Regex::new(r"(?P<date>[\w\d][\w\d\-\. ]+[\w\d])   +(?P<rev>[\w\.]+)  +(?P<info>[\w\- \.]+)").unwrap();
     let regex_version_entry_multiline = Regex::new(r"(?P<date>[\w\d][\w\d\-\. ]+[\w\d])   +(?P<rev>[\w\.]+)  +(?P<info>.+(\n {10,25}.+)*)").unwrap();
 
@@ -108,14 +93,6 @@ pub fn find_revision_history_date_version_info(text: &str) -> Option<Vec<Revisio
     let (version_to_parse, _) = version_start_text.split_at(version_end.start());
 
     let revisions = find_and_get_revision_entries(regex_version_entry, regex_version_entry_multiline, &version_to_parse);
-
-    /*    println!("{:?}\n", version_to_parse);
-        let mut revisions = Vec::new();
-        for cap in regex_version_entry.captures_iter(version_to_parse) {
-            //println!("Rev: {:?},\n Date: {:?},\n  Info: {:?}\n\n", cap.name("rev"), cap.name("date"), cap.name("info"));
-            println!("Rev: {:?},\n Date: {:?},\n  Info: {:?}\n\n", &cap["rev"], &cap["date"], &cap["info"]);
-            revisions.push(Revision{ version: cap["rev"].to_string(), date: cap["date"].to_string(), description: cap["info"].to_string() })
-        }*/
     revisions
 }
 
@@ -130,9 +107,10 @@ pub fn find_revision_history_version_date_info(text: &str) -> Option<Vec<Revisio
             .unwrap();
     let regex_version_end =
         Regex::new(r"\s*\n\s*\n\s*\n")
-            .unwrap(); //TODO oddelat tecku v datumu
-    //let regex_version_entry = Regex::new(r"(?P<rev>[\w\.]+)  +(?P<date>[\w\d][\w\d\-\. ]+[\w\d])   +(?P<info>[\w\- \./()]+(                       +[\w\- \.]+)*)").unwrap();
-    let regex_version_entry = Regex::new(r"(?P<rev>[\w\.]+)  +(?P<date>[\w\d][\w\d\-\. ]+[\w\d])   +(?P<info>.+(\s+                      +.+)*)").unwrap();
+            .unwrap();
+    let regex_version_entry = Regex::new(r"(?P<rev>[\w\.]+)  +(?P<date>[\w\d][\w\d\-\. ]+[\w\d])   +(?P<info>.+)").unwrap();
+    let regex_version_entry_multiline = Regex::new(r"(?P<rev>[\w\.]+)  +(?P<date>[\w\d][\w\d\-\. ]+[\w\d])   +(?P<info>.+.+(\n {10,25}.+)*)").unwrap();
+
     let mut version_start_find = regex_version_start_both.find(&text);
     if version_start_find == None {
         version_start_find = regex_version_start_version_date_info.find(&text);
@@ -146,13 +124,10 @@ pub fn find_revision_history_version_date_info(text: &str) -> Option<Vec<Revisio
     let (version_to_parse, _) = version_start_text.split_at(version_end.start());
 
     println!("{:?}\n", version_to_parse);
-    let mut revisions = Vec::new();
-    for cap in regex_version_entry.captures_iter(version_to_parse) {
-        //println!("Rev: {:?},\n Date: {:?},\n  Info: {:?}\n\n", cap.name("rev"), cap.name("date"), cap.name("info"));
-        println!("Rev: {:?},\n Date: {:?},\n  Info: {:?}\n\n", &cap[1], &cap[2], &cap[3]);
-        revisions.push(Revision{ version: cap[1].to_string(), date: cap[2].to_string(), description: replace_whitespace_with_space(&cap[3].to_string()) })
-    }
-    Some(revisions)
+
+
+    let revisions = find_and_get_revision_entries(regex_version_entry, regex_version_entry_multiline, &version_to_parse);
+    revisions
 }
 
 pub fn find_revision(text: &str) -> String {
@@ -290,7 +265,7 @@ JCOP 4.7 SE051                        All information provided in this document 
     let mut rev = find_revision_history_version_date_info(&text).unwrap();
     assert_eq!(rev.len(), 1);
     assert_eq!(rev[0].version, "1.3");
-    assert_eq!(rev[0].date, "30 June 2020"); //TODO 2020-06-30
+    assert_eq!(rev[0].date, "2020-06-30");
     assert_eq!(rev[0].description, "Initial version.");
 
 
@@ -334,7 +309,7 @@ P6022y VB  ",
     let mut rev = find_revision_history_version_date_info(&text).unwrap();
     assert_eq!(rev.len(), 1);
     assert_eq!(rev[0].version, "2.1");
-    assert_eq!(rev[0].date, "06.04.2018");  // TODO 2018-04-06
+    assert_eq!(rev[0].date, "2018-04-06");
     assert_eq!(rev[0].description, "Derived from P6022y VB Security Target v2.1");
 
 
@@ -409,16 +384,16 @@ Latest version is: Rev. 4.4 (29 October 2018)
     let mut rev = find_revision_history_version_date_info(&text).unwrap();
     assert_eq!(rev.len(), 4);
     assert_eq!(rev[0].version, "4.1");
-    assert_eq!(rev[0].date, "23-November-2015"); //TODO 2015-11-23
+    assert_eq!(rev[0].date, "2015-11-23");
     assert_eq!(rev[0].description, "Derived from P60D024/016/012yVB(Y/Z/A)/yVF Security Target");
     assert_eq!(rev[1].version, "4.2");
-    assert_eq!(rev[1].date, "29-May-2018");  //TODO 2018-05-29
+    assert_eq!(rev[1].date, "2018-05-29");
     assert_eq!(rev[1].description, "Revise wording for access control policy SFRs to be consistent with datasheet MMU errata update");
     assert_eq!(rev[2].version, "4.3");
-    assert_eq!(rev[2].date, "21-June-2018");  //TODO 2018-06-21
+    assert_eq!(rev[2].date, "2018-06-21");
     assert_eq!(rev[2].description, "This ST now claims compliance to CC v3.1 Rev. 5 Improve consistency in SFR wording Clarify read/write access permission FCS.COP.1[HW_DES] now claims compliance to NIST SP800-67");
     assert_eq!(rev[3].version, "4.4");
-    assert_eq!(rev[3].date, "29-October-2018");  //TODO 2018-10-29
+    assert_eq!(rev[3].date, "2018-10-29");
     assert_eq!(rev[3].description, "Update access control SFRs to reflect three access permissions enforeced by MMU");
 
     text = String::from(
@@ -445,27 +420,27 @@ Final                ",
     let mut rev = find_revision_history_version_date_info(&text).unwrap();
     assert_eq!(rev.len(), 6);
     assert_eq!(rev[0].version, "1.0");
-    assert_eq!(rev[0].date, "03-April-2017"); //TODO 2017-04-03
+    assert_eq!(rev[0].date, "2017-04-03");
     assert_eq!(rev[0].description, "First version");
 
     assert_eq!(rev[1].version, "1.1");
-    assert_eq!(rev[1].date, "31-May-2017");  //TODO 2017-05-31
+    assert_eq!(rev[1].date, "2017-05-31");
     assert_eq!(rev[1].description, "Minor update after certifier feedback.");
 
     assert_eq!(rev[2].version, "2.0");
-    assert_eq!(rev[2].date, "06-September-2018");  //TODO 2018-09-06
+    assert_eq!(rev[2].date, "2018-09-06");
     assert_eq!(rev[2].description, "Updated document version numbers in Tab. 1.1. Updated CC conformance to v3.1 rev5.");
 
     assert_eq!(rev[3].version, "2.1");
-    assert_eq!(rev[3].date, "15-November-2018");  //TODO 2018-11-15
+    assert_eq!(rev[3].date, "2018-11-15");
     assert_eq!(rev[3].description, "Updated SP 800-67 reference. Updated delivery information in section 1.4.1.1.");
 
     assert_eq!(rev[4].version, "2.2");
-    assert_eq!(rev[4].date, "09-May-2019");  //TODO 2019-05-09
+    assert_eq!(rev[4].date, "2019-05-09");
     assert_eq!(rev[4].description, "Removed single-DES and 2-key TDES references.");
 
     assert_eq!(rev[5].version, "2.3");
-    assert_eq!(rev[5].date, "06-June-2019");  //TODO 2019-06-06
+    assert_eq!(rev[5].date, "2019-06-06");
     assert_eq!(rev[5].description, "Updated Guidance and Operation Manual reference.");
 
 
@@ -542,7 +517,7 @@ Final   ",
     let mut rev = find_revision_history_version_date_info(&text).unwrap();
     assert_eq!(rev.len(), 1);
     assert_eq!(rev[0].version, "1.0");
-    assert_eq!(rev[0].date, "31-December-2018"); //TODO 2018-12-31
+    assert_eq!(rev[0].date, "2018-12-31");
     assert_eq!(rev[0].description, "Initial version of this Security Target Lite based on Security Target Revision 1.9");
 }
 

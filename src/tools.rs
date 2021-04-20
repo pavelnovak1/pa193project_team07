@@ -13,6 +13,7 @@ pub fn replace_whitespace_with_space(text: &str) -> String {
 }
 
 pub fn format_date(orig_date: &str) -> String {
+    println!("orig == {}", orig_date);
     let mut re = Regex::new(r"^(?P<d>\d{1,2})[. -](?P<m>\w+)[. -](?P<y>\d{4})").unwrap();
     let cap = match re.captures(orig_date) {
         Some(inner) => inner,
@@ -39,6 +40,7 @@ pub fn format_date(orig_date: &str) -> String {
     new_date.push_str(month);
     new_date.push_str("-");
     new_date.push_str(&cap["d"]);
+    println!("new == {}", new_date);
     new_date
 }
 
