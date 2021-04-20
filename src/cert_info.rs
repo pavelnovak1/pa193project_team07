@@ -1,13 +1,17 @@
 use std::collections::HashMap;
+use serde::Serialize;
 
-pub(crate) struct Certificate {    
-    title : String,
-    versions : Versions,
-    bibliography : Vec<(String, String)>,
+#[derive(Serialize)]
+pub struct Certificate {    
+    pub title : String,
+    pub versions : Versions,
+    pub bibliography : HashMap<String, String>,
+    pub table_of_contents: Vec<(String, String)>,
+    pub revisions: Vec<(String, String)>
 }
 
 impl Certificate{
-    pub(crate) fn new() -> Certificate{
+    pub fn new() -> Certificate{
         return Certificate{
             title: "".to_string(),
             versions: Versions {
@@ -19,11 +23,14 @@ impl Certificate{
                 ecc: vec![],
                 des: vec![]
             },
-            bibliography: vec![]
+            bibliography: HashMap::new(),
+            table_of_contents: vec![],
+            revisions: vec![]
         };
     }
 }
 
+#[derive(Serialize)]
 pub struct Versions {
     pub eal : Vec<String>,
     pub global_platform : Vec<String>,
