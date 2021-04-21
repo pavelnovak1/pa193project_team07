@@ -32,7 +32,9 @@ pub fn find_table_of_content(text : &String)->Vec<LineOfContents>{
         if !line_info.title.is_empty() {
             res.push(line_info);
         }
-        last_page = res[res.len() - 1].page;
+        if res.len() > 0 {
+            last_page = res[res.len() - 1].page;
+        }
     }
     return res;
 }
@@ -41,7 +43,13 @@ fn find_section(text : &String, table_regex: regex::Regex)->String{
     // let start_table_regex =
     //     Regex::new(r"(?m)(^Table of Contents$|TABLE OF CONTENTS|Contents$|Content$|INDEX$|CONTENT:$)\n([^\n]*\n){1,100}")
     //     .unwrap();
-    let head = table_regex.find(text).unwrap();
+    let mut text_clone = text.clone();
+    let wrong_header_regex = Regex::new(r"Info(rmation)?\s+Content\s+Keywords").unwrap();
+    if wrong_header_regex.is_match(&text_clone){
+        let offset = wrong_header_regex.find(text).unwrap().end();
+        crop_letters(&mut text_clone, offset);
+    }
+    let head = table_regex.find(&text_clone).unwrap();
     println!("Table of content begins at {}", head.start());
     head.as_str().to_string()
 
@@ -51,9 +59,6 @@ fn find_lines(text : &mut String, line_regex : regex::Regex)->Vec<String>{
     let mut result : Vec<String> = Vec::new();
 
     // use regex, because they can be different from lines in the .txt file
-    // let basic_line_regex = Regex::new(r"(\d(\.\d)*|[A-Z]\.|\d+.)\s*[A-Z](\w|\s|[“”\-\(\)\-:,/]|\w\.)*(\s|\.)+\d+")
-    //                         .unwrap();
-
     let mut offset = 0;
     while offset < text.len(){
         if line_regex.is_match(text){
@@ -105,7 +110,6 @@ fn extract_line_info(line : &String, last_page : i32)->LineOfContents{
 
     let section_number = caps.get(1).unwrap().as_str().to_string();
     let section_title = caps.get(3).unwrap().as_str().to_string();
-
     //this is not safe, should be OK/Err options
     let page = caps.get(6).unwrap().as_str().parse::<i32>().unwrap();
 
