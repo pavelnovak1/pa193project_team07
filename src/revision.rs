@@ -4,6 +4,11 @@ use regex::Regex;
 use crate::cert_info::Revision;
 
 // TODO uklidit kod
+// TODO test_dataset/1086b_pdf.txt
+// test_dataset/1105b_pdf.txt - je spatne expected file
+// TODO test_dataset/NSCIB-CC_0075541-ST.txt
+// test_dataset/NSCIB-CC-0145426-ST_rev_C-final.txt - je spatne expected file
+// TODO test_dataset/[ST-Lite-EAC]_(v1.1)_2018_2000036361_-_Security_Target_Lite_IDeal_Pass_v2.3-n_(SAC_EAC_Polymorphic).txt
 
 
 fn find_and_get_revision_entries(regex_version_entry: &Regex, regex_version_entry_multiline: &Regex, version_to_parse: &str) -> Option<Vec<Revision>> {
@@ -333,7 +338,24 @@ NXP Secure Smart Card Controller N7121 ",
 
 
     text = String::from(
-        "                          Security Target Lite
+        "  Crypto Library Cobalt on N7021
+  VA
+  Security Target Lite
+  Rev. 2.3 — 5 June 2019                               Product evaluation document
+  BSI-DSZ-CC-1019-V2                                                        PUBLIC
+
+
+
+
+Document information
+Information     Content
+Keywords        Security Target Lite, Crypto Library, N7021 VA
+Abstract        Security Target Lite for the N7021 VA Crypto Library according to the
+                Common Criteria for Information Technology Evaluation (CC) at Level
+                EAL6 augmented. The Crypto Library is developed and provided by NXP
+                Semiconductors, Business Line Security & Connectivity.
+NXP Semiconductors                                                                                        Crypto Library Cobalt on N7021 VA
+                                                                                                                            Security Target Lite
 
 
 
@@ -345,12 +367,13 @@ number
 
 
 
-Crypto Library Cobalt on N7021 VA  ",
+Crypto Library Cobalt on N7021 VA",
     );
 
     //rev = find_revision_history_version_date_info(&text).unwrap();
     rev = find_revision(&text);
     assert_eq!(rev.len(), 1);
+    assert_eq!(rev.len(), 0);
     assert_eq!(rev[0].version, "2.3");
     assert_eq!(rev[0].date, "2019-06-05");
     assert_eq!(rev[0].description, "Derived from full Security Target v2.3");

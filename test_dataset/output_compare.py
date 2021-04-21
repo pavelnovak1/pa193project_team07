@@ -1,8 +1,9 @@
 #!/bin/env python3
-import sys
 import json
 import math
+import sys
 from difflib import SequenceMatcher
+
 
 def load_file(file):
     with open(file, "r") as f:
@@ -14,6 +15,9 @@ def check_title(actual, expected):
             return 20
         return 0
 
+    if not "title" in expected:
+        expected["title"] = ""
+
     similarity = SequenceMatcher(None, actual["title"], expected["title"]).ratio()
     return 20 * similarity
 
@@ -22,6 +26,9 @@ def check_versions(actual, expected):
         if not "versions" in expected:
             return 20
         return 0
+
+    if not "versions" in expected:
+        expected["versions"] = {}
 
     actual = actual["versions"]
     expected = expected["versions"]
@@ -55,6 +62,9 @@ def check_toc(actual, expected):
         if not "table_of_contents" in expected:
             return 20
         return 0
+
+    if not "table_of_contents" in expected:
+        expected["table_of_contents"] = []
 
     actual = list(filter(lambda x: len(x) == 3, actual["table_of_contents"]))
     expected = expected["table_of_contents"]
@@ -91,6 +101,9 @@ def check_revisions(actual, expected):
             return 20
         return 0
 
+    if not "revisions" in expected:
+        expected["revisions"] = []
+
     actual = list(filter(lambda x: set(x) == {"version", "date", "description"}, actual["revisions"]))
     expected = expected["revisions"]
 
@@ -126,6 +139,9 @@ def check_bibliography(actual, expected):
             return 20
         return 0
 
+    if not "bibliography" in expected:
+        expected["bibliography"] = {}
+
     actual = actual["bibliography"]
     expected = expected["bibliography"]
 
@@ -147,8 +163,8 @@ def check_bibliography(actual, expected):
 
 
 def main():
-    actual = load_file(sys.argv[1])
-    expected = load_file(sys.argv[2])
+    expected = load_file(sys.argv[1])
+    actual = load_file(sys.argv[2])
 
     checks = (check_title, check_versions, check_toc, check_revisions, check_bibliography)
     points = 0
