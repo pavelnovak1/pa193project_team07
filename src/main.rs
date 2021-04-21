@@ -4,6 +4,7 @@ mod cert_info;
 mod versions;
 mod title;
 mod biblio;
+mod table_of_contents;
 
 use std::env;
 use crate::extract_info::extract_info;

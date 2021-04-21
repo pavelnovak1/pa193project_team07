@@ -4,6 +4,7 @@ pub(crate) struct Certificate {
     title : String,
     versions : Versions,
     bibliography : Vec<(String, String)>,
+    table_of_contents : Vec<LineOfContents>
 }
 
 impl Certificate{
@@ -19,7 +20,8 @@ impl Certificate{
                 ecc: vec![],
                 des: vec![]
             },
-            bibliography: vec![]
+            bibliography: vec![],
+            table_of_contents : vec![]
         };
     }
 }
@@ -46,4 +48,10 @@ impl Versions{
             des: vec![]
         };
     }
+}
+
+pub struct LineOfContents{
+    pub section : String,
+    pub title : String,
+    pub page : i32
 }

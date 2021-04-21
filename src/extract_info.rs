@@ -5,6 +5,7 @@ use crate::cert_info::*;
 use crate::versions::find_versions;
 use crate::title::find_title;
 use crate::biblio::find_biblio;
+use crate::table_of_contents::find_table_of_content;
 
 pub(crate) fn extract_info(filename: &String) -> Certificate {
     let cert = std::fs::read_to_string(filename);
@@ -20,6 +21,7 @@ pub(crate) fn extract_info(filename: &String) -> Certificate {
     let title = find_title(&cert_text);
     let versions = find_versions(&cert_text);
     let biblio = find_biblio(&cert_text);
+    let table_of_contents = find_table_of_content(&cert_text);
     let certificate = Certificate::new();
     certificate
 }
