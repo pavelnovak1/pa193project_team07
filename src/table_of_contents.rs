@@ -16,13 +16,13 @@ pub fn find_table_of_content(text : &String)->Vec<LineOfContents>{
 
 
     let mut table_section = find_section(text, table_section_regex);
-    println!("Section head: {}", table_section);
+    // println!("Section head: {}", table_section);
 
     // in section lot of false positives
     let mut section = find_lines(&mut table_section, simple_line_regex);
 
-    println!("######### STOP ###########");
-    println!("##### Now content lines #####");
+    // println!("######### STOP ###########");
+    // println!("##### Now content lines #####");
 
     let mut last_page : i32 = 0;
     for line in section.iter() {
@@ -40,9 +40,6 @@ pub fn find_table_of_content(text : &String)->Vec<LineOfContents>{
 }
 
 fn find_section(text : &String, table_regex: regex::Regex)->String{
-    // let start_table_regex =
-    //     Regex::new(r"(?m)(^Table of Contents$|TABLE OF CONTENTS|Contents$|Content$|INDEX$|CONTENT:$)\n([^\n]*\n){1,100}")
-    //     .unwrap();
     let mut text_clone = text.clone();
     let wrong_header_regex = Regex::new(r"Info(rmation)?\s+Content\s+Keywords").unwrap();
     if wrong_header_regex.is_match(&text_clone){
@@ -50,7 +47,7 @@ fn find_section(text : &String, table_regex: regex::Regex)->String{
         crop_letters(&mut text_clone, offset);
     }
     let head = table_regex.find(&text_clone).unwrap();
-    println!("Table of content begins at {}", head.start());
+    // println!("Table of content begins at {}", head.start());
     head.as_str().to_string()
 
 }
@@ -94,14 +91,6 @@ fn crop_letters(s: &mut String, pos: usize) {
     }
 }
 
-// copy od Pavla
-// fn remove_whitespaces(line : String)->String{
-//     let regex_mul_spaces = Regex::new(r"\s+").unwrap();
-//     let regex_dash_nl = Regex::new(r"-\n\s+").unwrap();
-//     let mut t = regex_dash_nl.replace_all(&text, "-").to_string();
-//     regex_mul_spaces.replace_all(&t, " ").to_string().trim().to_string()
-// }
-
 fn extract_line_info(line : &String, last_page : i32)->LineOfContents{
     let mut result = LineOfContents::new();
     let simple_line_regex = Regex::new(r"(\d{1,2}(\.\d)*|[A-Z]\.|\d{1,2}.)\s*([A-Z](\w|\s|[“”\-\(\)\-:,/]|\w\.)*)(\s|\.)+(\d+)")
@@ -119,8 +108,8 @@ fn extract_line_info(line : &String, last_page : i32)->LineOfContents{
     if last_page > page {
         return result;
     }
-    println!("Number: {}   Title: {}  chars: {} Page: {} Last page: {}",
-             section_number, section_title, section_title.len(), page, last_page);
+    // println!("Number: {}   Title: {}  chars: {} Page: {} Last page: {}",
+    //          section_number, section_title, section_title.len(), page, last_page);
 
     result.section = section_number;
     result.title = section_title;
