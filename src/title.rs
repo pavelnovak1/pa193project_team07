@@ -1,6 +1,19 @@
 use regex::Match;
 use regex::Regex;
 
+/*
+test_dataset/0782V5b_pdf.txt  --  11  -- tohle ai nepujde vylepsit
+test_dataset/1126b_pdf.txt  --  18  -- nejde, spatne expected ?
+test_dataset/NSCIB-CC-0075446-CRv2.txt  --  18  --  nejde, spatne expected ?
+test_dataset/NSCIB-CC_0075541-ST.txt
+8
+test_dataset/NSCIB-CC-0145426-ST_rev_C-final.txt  --  10  -- nejde, spatne expected ?
+test_dataset/[ST-Lite-EAC]_(v1.1)_2018_2000036361_-_Security_Target_Lite_IDeal_Pass_v2.3-n_(SAC_EAC_Polymorphic).txt
+9
+test_dataset/[ST-Mercury]_Security_Target_Mercury_v3.5.txt
+15
+ */
+
 fn find(regex: regex::Regex, text: &str) -> Match {
     let results = regex.find(&text).unwrap();
     results
@@ -704,7 +717,7 @@ www.infineon.com                                                                
 
 
         assert_eq!(find_title_first_lines(&text).unwrap(), String::from("ePassport configuration of SECORA™ ID S Infineon Applet Collection - eMRTD V1.0"));
-        //assert_eq!(find_title(&text), String::from("ePassport configuration of SECORA™ ID S Infineon Applet Collection - eMRTD V1.0"));
+        assert_eq!(find_title(&text), String::from("ePassport configuration of SECORA™ ID S Infineon Applet Collection - eMRTD V1.0"));
     }
 
 }
