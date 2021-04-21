@@ -9,9 +9,9 @@ const TABLE_MAX_LINE:usize = 100;
 pub fn find_table_of_content(text : &String)->Vec<LineOfContents>{
     let mut res : Vec<LineOfContents> = Vec::new();
 
-    let table_section_regex = Regex::new(r"(?m)(^Table of Contents$|TABLE OF CONTENTS|Contents$|Content$|INDEX$|CONTENT:$)\n([^\n]*\n){1,100}")
+    let table_section_regex = Regex::new(r"(?m)(^Table of Contents$|TABLE OF CONTENTS|Contents$|Content$|INDEX$|CONTENTS:$)\n([^\n]*\n){1,150}")
         .unwrap();
-    let simple_line_regex = Regex::new(r"(\d(\.\d)*|[A-Z]\.|\d+.)\s*[A-Z](\w|\s|[“”\-\(\)\-:,/]|\w\.)*(\s|\.)+\d+")
+    let simple_line_regex = Regex::new(r"(\d{1,2}(\.\d)*|[A-Z]\.|\d{1,2}.)\s*[A-Z](\w|\s|[“”\-\(\)\-:,/]|\w\.)*(\s|\.)+\d+")
         .unwrap();
 
 
@@ -95,7 +95,7 @@ fn crop_letters(s: &mut String, pos: usize) {
 
 fn extract_line_info(line : &String)->LineOfContents{
     let mut result = LineOfContents::new();
-    let simple_line_regex = Regex::new(r"(\d(\.\d)*|[A-Z]\.|\d+.)\s*([A-Z](\w|\s|[“”\-\(\)\-:,/]|\w\.)*)(\s|\.)+(\d+)")
+    let simple_line_regex = Regex::new(r"(\d{1,2}(\.\d)*|[A-Z]\.|\d{1,2}.)\s*([A-Z](\w|\s|[“”\-\(\)\-:,/]|\w\.)*)(\s|\.)+(\d+)")
         .unwrap();
     let caps = simple_line_regex.captures(line).unwrap();
 
