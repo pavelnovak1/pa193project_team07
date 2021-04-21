@@ -33,11 +33,11 @@ for (( j=0; j<$len; j++ )); do
 	echo "${worst_points[$j]}"
 done
 
-echo "test_dataset/0939V3b_pdf.txt - 14pts:"
-echo "Problems: Title, Biblio (Numbers)"
-echo "test_dataset/1019V2b_pdf.txt - 8pts:"
-echo "Problems: Title, Biblio (Numbers)"
-echo "test_dataset/1022b_pdf.txt - 13pts:"
+echo "test_dataset/0939V3b_pdf.txt - 54pts:"
+echo "Problems: Biblio (Numbers)"
+echo "test_dataset/1019V2b_pdf.txt - 48pts:"
+echo "Problems: Biblio (Numbers)"
+echo "test_dataset/1022b_pdf.txt - 40pts:"
 echo "Problems: Title, Biblio (References missing)"
 echo "test_dataset/1040b_pdf.txt - 13pts:"
 echo "Problems: Title, Biblio (References missing)"
