@@ -24,11 +24,15 @@ pub fn find_table_of_content(text : &String)->Vec<LineOfContents>{
     println!("######### STOP ###########");
     println!("##### Now content lines #####");
 
+    let mut last_page : i32 = 0;
     for line in section.iter() {
         // println!("Content line: {}", line);
         // line = remove_whitespaces(line);
-        let line_info : LineOfContents = extract_line_info(line);
-        // res.push(line_info);
+        let line_info : LineOfContents = extract_line_info(line, last_page);
+        if !line_info.title.is_empty() {
+            res.push(line_info);
+        }
+        last_page = res[res.len() - 1].page;
     }
     return res;
 }
@@ -93,7 +97,7 @@ fn crop_letters(s: &mut String, pos: usize) {
 //     regex_mul_spaces.replace_all(&t, " ").to_string().trim().to_string()
 // }
 
-fn extract_line_info(line : &String)->LineOfContents{
+fn extract_line_info(line : &String, last_page : i32)->LineOfContents{
     let mut result = LineOfContents::new();
     let simple_line_regex = Regex::new(r"(\d{1,2}(\.\d)*|[A-Z]\.|\d{1,2}.)\s*([A-Z](\w|\s|[“”\-\(\)\-:,/]|\w\.)*)(\s|\.)+(\d+)")
         .unwrap();
@@ -108,7 +112,11 @@ fn extract_line_info(line : &String)->LineOfContents{
     if section_title.len() > CHAPTER_MAX_CHAR{
         return result;
     }
-    println!("Number: {}   Title: {}  chars: {} Page: {}", section_number, section_title, section_title.len(), page);
+    if last_page > page {
+        return result;
+    }
+    println!("Number: {}   Title: {}  chars: {} Page: {} Last page: {}",
+             section_number, section_title, section_title.len(), page, last_page);
 
     result.section = section_number;
     result.title = section_title;
