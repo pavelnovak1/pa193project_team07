@@ -34,7 +34,6 @@ fn find_title_certification_report(text: &str) -> Option<String> {
     let regex_cap_for_from = Regex::new(r"(?:^|\s)(?:\w|\s)+Certification Report\s+Version \d{4}-\d+\s+(?P<title>(.*|\s)*[^\s])\s+Sponsor(?: and developer)?:").unwrap();
     let caps = regex_cap_for_from.captures(text)?;
     let title = caps.name("title").unwrap().as_str();
-    println!("find_title_certification_report");
     Some(replace_whitespace_with_space(title))
 }
 
@@ -45,7 +44,6 @@ fn find_title_for_from(text: &str) -> Option<String> {
             .unwrap();
     let caps = regex_cap_for_from.captures(text)?;
     let title = caps.name("title").unwrap().as_str();
-    println!("find_title_for_from");
     Some(replace_whitespace_with_space(title))
 }
 
@@ -59,8 +57,6 @@ fn find_title_security_target_lite_before(text: &str) -> Option<String> {
         &title_start,
     );
     let (title, _) = title_start.split_at(result.start());
-    println!("find_title_security_target_lite_before");
-    println!("{}", title);
     Some(replace_whitespace_with_space(title))
 }
 
@@ -84,7 +80,6 @@ fn find_title_first_lines(text: &str) -> Option<String> {
             .unwrap();
     let caps = regex_cap_for_from.captures(text)?;
     let title = caps.name("title").unwrap().as_str();
-    println!("find_title_first_lines");
     Some(replace_whitespace_with_space(title))
 }
 
@@ -101,7 +96,6 @@ pub fn find_title(text: &str) -> String {
         result = find_title_security_target_after(&text);
     }
     if result.is_none() {
-        println!("HERE");
         result = find_title_first_lines(&text);
     }
     result.unwrap()
