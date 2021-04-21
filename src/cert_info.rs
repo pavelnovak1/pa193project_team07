@@ -1,21 +1,22 @@
 use std::collections::HashMap;
-use serde::Serialize;
-use regex::Captures;
-use crate::tools;
 
+use regex::Captures;
+use serde::Serialize;
+
+use crate::tools;
 
 #[derive(Serialize)]
 pub struct Certificate {
-    pub title : String,
-    pub versions : Versions,
-    pub bibliography : HashMap<String, String>,
+    pub title: String,
+    pub versions: Versions,
+    pub bibliography: HashMap<String, String>,
     pub table_of_contents: Vec<(String, String)>,
-    pub revisions: Vec<(String, String)>
+    pub revisions: Vec<Revision>,
+}
 
-
-impl Certificate{
-    pub fn new() -> Certificate{
-        return Certificate{
+impl Certificate {
+    pub fn new() -> Certificate {
+        return Certificate {
             title: "".to_string(),
             versions: Versions {
                 eal: vec![],
@@ -24,41 +25,41 @@ impl Certificate{
                 sha: vec![],
                 rsa: vec![],
                 ecc: vec![],
-                des: vec![]
+                des: vec![],
             },
             bibliography: HashMap::new(),
             table_of_contents: vec![],
-            revisions: vec![]
-        };
+            revisions: vec![],
+        }
     }
 }
 
 #[derive(Serialize)]
 pub struct Versions {
-    pub eal : Vec<String>,
-    pub global_platform : Vec<String>,
-    pub java_card : Vec<String>,
-    pub sha : Vec<String>,
-    pub rsa : Vec<String>,
-    pub ecc : Vec<String>,
-    pub des : Vec<String>,
+    pub eal: Vec<String>,
+    pub global_platform: Vec<String>,
+    pub java_card: Vec<String>,
+    pub sha: Vec<String>,
+    pub rsa: Vec<String>,
+    pub ecc: Vec<String>,
+    pub des: Vec<String>,
 }
 
-impl Versions{
-    pub fn new()->Versions{
-        return Versions{ 
+impl Versions {
+    pub fn new() -> Versions {
+        return Versions {
             eal: vec![],
             global_platform: vec![],
             java_card: vec![],
             sha: vec![],
             rsa: vec![],
             ecc: vec![],
-            des: vec![]
+            des: vec![],
         };
     }
 }
 
-
+#[derive(Serialize)]
 pub struct Revision {
     pub version: String,
     pub date: String,
@@ -83,3 +84,9 @@ impl Revision {
         Revision { version, date, description }
     }
 }
+/*
+impl Serialize for Revision {
+    fn serialize<Serializer>(&self, serializer: Serializer) -> Result<Serializer::Ok, Serializer::Error> {
+        let mut state = serializer.serialize_struct("")
+    }
+}*/

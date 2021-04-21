@@ -122,19 +122,21 @@ pub fn find_revision_history_version_date_info(text: &str) -> Option<Vec<Revisio
     revisions
 }
 
-pub fn find_revision(text: &str) -> String {
-/*    let mut result = find_title_certification_report(&text);
+pub fn find_revision(text: &str) -> Vec<Revision> {
+    let mut result = find_version_control(&text);
     if result.is_none() {
-        result = find_title_for_from(&text);
+        result = find_revision_history_date_version_info(&text);
     }
     if result.is_none() {
-        result = find_title_security_target_lite_before(&text);
+        result = find_revision_history_version_date_info(&text);
     }
     if result.is_none() {
-        result = find_title_security_target_after(&text);
+        result = find_revision_history_end(&text);
     }
-    result.unwrap()*/
-    "".to_string()
+    if result.is_none() {
+        result = Some(Vec::new());
+    }
+    result.unwrap()
 }
 
 
@@ -176,7 +178,8 @@ CC Developer Document                                        4                  
 Public",
     );
     println!("FERE!\n");
-    let mut rev = find_revision_history_date_version_info(&text).unwrap();
+//    let mut rev = find_revision_history_date_version_info(&text).unwrap();
+    let mut rev = find_revision(&text);
     assert_eq!(rev.len(), 5);
     assert_eq!(rev[0].version, "1.0");
     assert_eq!(rev[0].date, "2017-10-25");
@@ -195,8 +198,7 @@ Public",
     assert_eq!(rev[4].description, "Accepted final remarks and provided minor editorial update.");
 
 
-
-    let mut text = String::from(
+    text = String::from(
         "public
 
 
@@ -213,8 +215,9 @@ Revision History
 
 Security Target Lite                            4        ",
     );
-    println!("FERE!\n");
-    let mut rev = find_revision_history_date_version_info(&text).unwrap();
+
+    //rev = find_revision_history_date_version_info(&text).unwrap();
+    rev = find_revision(&text);
     assert_eq!(rev.len(), 2);
     assert_eq!(rev[0].version, "1.0");
     assert_eq!(rev[0].date, "2017-01-27");
@@ -222,8 +225,6 @@ Security Target Lite                            4        ",
     assert_eq!(rev[1].version, "4.1");
     assert_eq!(rev[1].date, "2020-10-21");
     assert_eq!(rev[1].description, "final version");
-
-
 }
 
 
@@ -254,14 +255,15 @@ Rev          Date           Description
 JCOP 4.7 SE051                        All information provided in this document is subject to legal disclaimers.          © NXP B.V. 2020. All rights reserved.",
     );
 
-    let mut rev = find_revision_history_version_date_info(&text).unwrap();
+    //let mut rev = find_revision_history_version_date_info(&text).unwrap();
+    let mut rev = find_revision(&text);
     assert_eq!(rev.len(), 1);
     assert_eq!(rev[0].version, "1.3");
     assert_eq!(rev[0].date, "2020-06-30");
     assert_eq!(rev[0].description, "Initial version.");
 
 
-    let mut text = String::from(
+    text = String::from(
         "                   Security Target Lite
 
 
@@ -276,14 +278,15 @@ Rev         Date            Description
 Contact information",
     );
 
-    let mut rev = find_revision_history_version_date_info(&text).unwrap();
+    //rev = find_revision_history_version_date_info(&text).unwrap();
+    rev = find_revision(&text);
     assert_eq!(rev.len(), 1);
     assert_eq!(rev[0].version, "1.0");
     assert_eq!(rev[0].date, "2020-02-12");
     assert_eq!(rev[0].description, "Initial Version of this Security Target Lite");
 
 
-    let mut text = String::from(
+    text = String::from(
         "Security Target Lite
 
 
@@ -298,14 +301,15 @@ number
 P6022y VB  ",
     );
 
-    let mut rev = find_revision_history_version_date_info(&text).unwrap();
+    //let mut rev = find_revision_history_version_date_info(&text).unwrap();
+    rev = find_revision(&text);
     assert_eq!(rev.len(), 1);
     assert_eq!(rev[0].version, "2.1");
     assert_eq!(rev[0].date, "2018-04-06");
     assert_eq!(rev[0].description, "Derived from P6022y VB Security Target v2.1");
 
 
-    let mut text = String::from(
+    text = String::from(
         "Table 1. Revision history
 Version                   Release date   Change notice
 1.0                       2018-11-30     Initial version based on full Security Target v1.4
@@ -317,7 +321,8 @@ Version                   Release date   Change notice
 NXP Secure Smart Card Controller N7121 ",
     );
 
-    let mut rev = find_revision_history_version_date_info(&text).unwrap();
+    //rev = find_revision_history_version_date_info(&text).unwrap();
+    rev = find_revision(&text);
     assert_eq!(rev.len(), 2);
     assert_eq!(rev[0].version, "1.0");
     assert_eq!(rev[0].date, "2018-11-30");
@@ -327,7 +332,7 @@ NXP Secure Smart Card Controller N7121 ",
     assert_eq!(rev[1].description, "Updated version based on full Security Target v1.5");
 
 
-    let mut text = String::from(
+    text = String::from(
         "                          Security Target Lite
 
 
@@ -343,14 +348,15 @@ number
 Crypto Library Cobalt on N7021 VA  ",
     );
 
-    let mut rev = find_revision_history_version_date_info(&text).unwrap();
+    //rev = find_revision_history_version_date_info(&text).unwrap();
+    rev = find_revision(&text);
     assert_eq!(rev.len(), 1);
     assert_eq!(rev[0].version, "2.3");
     assert_eq!(rev[0].date, "2019-06-05");
     assert_eq!(rev[0].description, "Derived from full Security Target v2.3");
 
 
-    let mut text = String::from(
+    text = String::from(
         "Semiconductors                             P60D024/016/012yVB(Y/Z/A)/yVF
                                                                                                                    Security Target Lite
 
@@ -373,7 +379,8 @@ Latest version is: Rev. 4.4 (29 October 2018)
 ",
     );
 
-    let mut rev = find_revision_history_version_date_info(&text).unwrap();
+    //rev = find_revision_history_version_date_info(&text).unwrap();
+    rev = find_revision(&text);
     assert_eq!(rev.len(), 4);
     assert_eq!(rev[0].version, "4.1");
     assert_eq!(rev[0].date, "2015-11-23");
@@ -409,7 +416,8 @@ Rev     Date                Description
 Final                ",
     );
 
-    let mut rev = find_revision_history_version_date_info(&text).unwrap();
+    //let mut rev = find_revision_history_version_date_info(&text).unwrap();
+    rev = find_revision(&text);
     assert_eq!(rev.len(), 6);
     assert_eq!(rev[0].version, "1.0");
     assert_eq!(rev[0].date, "2017-04-03");
@@ -459,7 +467,8 @@ Rev       Date             Description
 Release                                                                           ©NXP B.V. 2020. All rights reserved.",
     );
 
-    let mut rev = find_revision_history_version_date_info(&text).unwrap();
+    //let mut rev = find_revision_history_version_date_info(&text).unwrap();
+    rev = find_revision(&text);
     assert_eq!(rev.len(), 7);
     assert_eq!(rev[0].version, "2.0");
     assert_eq!(rev[0].date, "2019-07-24");
@@ -506,7 +515,8 @@ Rev     Date               Description
 Final   ",
     );
 
-    let mut rev = find_revision_history_version_date_info(&text).unwrap();
+    //rev = find_revision_history_version_date_info(&text).unwrap();
+    rev = find_revision(&text);
     assert_eq!(rev.len(), 1);
     assert_eq!(rev[0].version, "1.0");
     assert_eq!(rev[0].date, "2018-12-31");
@@ -541,7 +551,8 @@ Version       Description of change
 CC Document   ",
     );
 
-    let mut rev = find_revision_history_end(&text).unwrap();
+//    let mut rev = find_revision_history_end(&text).unwrap();
+    let mut rev = find_revision(&text);
     assert_eq!(rev.len(), 2);
     assert_eq!(rev[0].version, "0.2");
     assert_eq!(rev[1].version, "3.5");
@@ -565,7 +576,8 @@ CC Document   ",
 15. ENVIRONMENTAL/ECOLOGICAL REQUIREMENTS",
     );
 
-    rev = find_revision_history_end(&text).unwrap();
+//    rev = find_revision_history_end(&text).unwrap();
+    rev = find_revision(&text);
     assert_eq!(rev.len(), 3);
     assert_eq!(rev[0].version, "Rev A");
     assert_eq!(rev[1].version, "Rev B");
@@ -597,7 +609,8 @@ Security Target Lite                      51          4.3
                                                2019-07-24",
     );
 
-    rev = find_revision_history_end(&text).unwrap();
+    //rev = find_revision_history_end(&text).unwrap();
+    rev = find_revision(&text);
     assert_eq!(rev.len(), 2);
     assert_eq!(rev[0].version, "0.2");
     assert_eq!(rev[1].version, "4.3");
@@ -626,7 +639,8 @@ v4.0          Final version
 Security Target                         68         v4.0",
     );
 
-    rev = find_revision_history_end(&text).unwrap();
+    //rev = find_revision_history_end(&text).unwrap();
+    rev = find_revision(&text);
     assert_eq!(rev.len(), 2);
     assert_eq!(rev[0].version, "1.2");
     assert_eq!(rev[1].version, "4.0");
@@ -650,7 +664,8 @@ Security Target                         68         v4.0",
 15. ENVIRONMENTAL/ECOLOGICAL REQUIREMENTS",
     );
 
-    rev = find_revision_history_end(&text).unwrap();
+    //rev = find_revision_history_end(&text).unwrap();
+    rev = find_revision(&text);
     assert_eq!(rev.len(), 3);
     assert_eq!(rev[0].version, "Rev A");
     assert_eq!(rev[0].date, "");
@@ -710,7 +725,8 @@ Version       Description of change
 CC Document    ",
     );
 
-    rev = find_revision_history_end(&text).unwrap();
+    //rev = find_revision_history_end(&text).unwrap();
+    rev = find_revision(&text);
     assert_eq!(rev.len(), 18);
     assert_eq!(rev[0].version, "0.1");
     assert_eq!(rev[0].date, "");
@@ -824,7 +840,8 @@ Version     Date           Author                Changes to Previous Version
 ",
     );
 
-    let mut rev = find_version_control(&text).unwrap();
+//    let mut rev = find_version_control(&text).unwrap();
+    let mut rev = find_revision(&text);
     assert_eq!(rev.len(), 3);
     assert_eq!(rev[0].version, "1.0");
     assert_eq!(rev[1].version, "1.1");
