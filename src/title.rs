@@ -51,7 +51,7 @@ fn find_title_for_from(text: &str) -> Option<String> {
 
 
 fn find_title_security_target_lite_before(text: &str) -> Option<String> {
-    let regex_sec_target = Regex::new(r"(?:^|(?:\s*\n\s*\n\s*\n))\s*(?:\s+Common Criteria.*)?(?:(?:Security Target(?: Lite)?)|(?:SECURITY TARGET (?:LITE)?))(?:\s+Common Criteria.*)?(?:\s*(?:EAL.*))?\s+").unwrap();
+    let regex_sec_target = Regex::new(r"(?:^(?:\s*\n\s*\n\s*\n))\s*(?:\s+Common Criteria.*)?(?:(?:Security Target(?: Lite)?)|(?:SECURITY TARGET (?:LITE)?))(?:\s+Common Criteria.*)?(?:\s*(?:EAL.*))?\s+").unwrap();
     let mut result = regex_sec_target.find(&text)?;
     let (_, title_start) = text.split_at(result.end());
     result = find(
@@ -60,6 +60,7 @@ fn find_title_security_target_lite_before(text: &str) -> Option<String> {
     );
     let (title, _) = title_start.split_at(result.start());
     println!("find_title_security_target_lite_before");
+    println!("{}", title);
     Some(replace_whitespace_with_space(title))
 }
 
@@ -100,6 +101,7 @@ pub fn find_title(text: &str) -> String {
         result = find_title_security_target_after(&text);
     }
     if result.is_none() {
+        println!("HERE");
         result = find_title_first_lines(&text);
     }
     result.unwrap()
