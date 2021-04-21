@@ -1,18 +1,21 @@
 use std::collections::HashMap;
-
+use serde::Serialize;
 use regex::Captures;
-
 use crate::tools;
 
-pub(crate) struct Certificate {
-    title: String,
-    versions: Versions,
-    bibliography: Vec<(String, String)>,
-}
 
-impl Certificate {
-    pub(crate) fn new() -> Certificate {
-        return Certificate {
+#[derive(Serialize)]
+pub struct Certificate {
+    pub title : String,
+    pub versions : Versions,
+    pub bibliography : HashMap<String, String>,
+    pub table_of_contents: Vec<(String, String)>,
+    pub revisions: Vec<(String, String)>
+
+
+impl Certificate{
+    pub fn new() -> Certificate{
+        return Certificate{
             title: "".to_string(),
             versions: Versions {
                 eal: vec![],
@@ -23,18 +26,21 @@ impl Certificate {
                 ecc: vec![],
                 des: vec![]
             },
-            bibliography: vec![]
+            bibliography: HashMap::new(),
+            table_of_contents: vec![],
+            revisions: vec![]
         };
     }
 }
 
+#[derive(Serialize)]
 pub struct Versions {
     pub eal : Vec<String>,
     pub global_platform : Vec<String>,
     pub java_card : Vec<String>,
-    pub sha : Vec<i32>,
-    pub rsa : Vec<i32>,
-    pub ecc : Vec<i32>,
+    pub sha : Vec<String>,
+    pub rsa : Vec<String>,
+    pub ecc : Vec<String>,
     pub des : Vec<String>,
 }
 

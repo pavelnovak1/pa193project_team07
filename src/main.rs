@@ -1,7 +1,3 @@
-use std::env;
-
-use crate::extract_info::extract_info;
-
 mod extract_info;
 mod write_info;
 mod cert_info;
@@ -11,18 +7,20 @@ mod biblio;
 mod revision;
 mod tools;
 
+use std::env;
+use crate::extract_info::extract_info;
+use crate::write_info::write;
+use crate::cert_info::Certificate;
+
 fn main() {
-    println!("Arguments are");
     let args: Vec<String> = env::args().collect();
-    println!("{:?}", args);
 
     let config = Config::new(&args);
-    println!("{}", config.input_filename);
 
     //(pretty print) queries zatim nebudou
 
     let certificate = extract_info(&config.input_filename);
-    //write_info(config.output_filename);
+    write(&certificate, &config.output_filename);
 }
 struct Config {
     queries : Vec<String>,
