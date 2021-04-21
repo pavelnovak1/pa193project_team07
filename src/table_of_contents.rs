@@ -9,9 +9,9 @@ const TABLE_MAX_LINE:usize = 100;
 pub fn find_table_of_content(text : &String)->Vec<LineOfContents>{
     let mut res : Vec<LineOfContents> = Vec::new();
 
-    let table_section_regex = Regex::new(r"(?m)(^Table of Contents$|TABLE OF CONTENTS|Contents$|Content$|INDEX$|CONTENTS:$)\n([^\n]*\n){1,150}")
+    let table_section_regex = Regex::new(r"(?m)(Table of Contents$|TABLE OF CONTENTS|Contents$|Content$|INDEX$|CONTENTS:$)\n([^\n]*\n){1,150}")
         .unwrap();
-    let simple_line_regex = Regex::new(r"(\d{1,2}(\.\d)*|[A-Z]\.|\d{1,2}.)\s*[A-Z](\w|\s|[“”\-\(\)\-:,/]|\w\.)*(\s|\.)+\d+")
+    let simple_line_regex = Regex::new(r"(\d{1,2}(\.\d)*|[A-Z]\.|\d{1,2}.)\s*([A-Z](\w|\s|[“”\-\(\)\-:,/]|\w\.)*)(\s|\.)+(\d+)")
         .unwrap();
 
 
@@ -19,7 +19,7 @@ pub fn find_table_of_content(text : &String)->Vec<LineOfContents>{
     // println!("Section head: {}", table_section);
 
     // in section lot of false positives
-    let mut section = find_lines(&mut table_section, simple_line_regex);
+    let mut section = find_lines(&mut table_section, simple_line_regex.clone());
 
     // println!("######### STOP ###########");
     // println!("##### Now content lines #####");
@@ -28,7 +28,7 @@ pub fn find_table_of_content(text : &String)->Vec<LineOfContents>{
     for line in section.iter() {
         // println!("Content line: {}", line);
         // line = remove_whitespaces(line);
-        let line_info : LineOfContents = extract_line_info(line, last_page);
+        let line_info : LineOfContents = extract_line_info(line, simple_line_regex.clone(), last_page);
         if !line_info.title.is_empty() {
             res.push(line_info);
         }
@@ -91,13 +91,17 @@ fn crop_letters(s: &mut String, pos: usize) {
     }
 }
 
-fn extract_line_info(line : &String, last_page : i32)->LineOfContents{
+fn extract_line_info(line : &String, regex : regex::Regex, last_page : i32)->LineOfContents{
     let mut result = LineOfContents::new();
-    let simple_line_regex = Regex::new(r"(\d{1,2}(\.\d)*|[A-Z]\.|\d{1,2}.)\s*([A-Z](\w|\s|[“”\-\(\)\-:,/]|\w\.)*)(\s|\.)+(\d+)")
-        .unwrap();
-    let caps = simple_line_regex.captures(line).unwrap();
+    // let simple_line_regex =
+    //     Regex::new(r"(\d{1,2}(\.\d)*|[A-Z]\.|\d{1,2}\.)\s*([A-Z](\w|\s|[“”\-\(\)\-:,/]|\w\.)*)(\s|\.)+(\d+)")
+    //     .unwrap();
+    let caps = regex.captures(line).unwrap();
 
-    let section_number = caps.get(1).unwrap().as_str().to_string();
+    let mut section_number = caps.get(1).unwrap().as_str().to_string();
+    if section_number.chars().last().unwrap().eq(&'.'){
+        section_number.pop();
+    }
     let section_title = caps.get(3).unwrap().as_str().to_string();
     //this is not safe, should be OK/Err options
     let page = caps.get(6).unwrap().as_str().parse::<i32>().unwrap();
