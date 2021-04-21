@@ -55,3 +55,13 @@ pub struct LineOfContents{
     pub title : String,
     pub page : i32
 }
+
+impl LineOfContents{
+    pub fn new()->LineOfContents{
+        return LineOfContents {
+            section: String::new(),
+            title: String::new(),
+            page: 0
+        }
+    }
+}

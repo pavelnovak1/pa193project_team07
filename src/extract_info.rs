@@ -18,7 +18,7 @@ pub(crate) fn extract_info(filename: &String) -> Certificate {
         }
     }
 
-    let title = find_title(&cert_text);
+    // let title = find_title(&cert_text);
     let versions = find_versions(&cert_text);
     let biblio = find_biblio(&cert_text);
     let table_of_contents = find_table_of_content(&cert_text);

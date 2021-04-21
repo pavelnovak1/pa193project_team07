@@ -1,28 +1,88 @@
 use regex::Regex;
 use std::collections::HashSet;
 use crate::cert_info::LineOfContents;
+use regex::internal::Input;
+
+const CHAPTER_MAX_CHAR:usize = 100;
+const TABLE_MAX_LINE:usize = 100;
 
 pub fn find_table_of_content(text : &String)->Vec<LineOfContents>{
     let mut res : Vec<LineOfContents> = Vec::new();
 
-    let mut section = find_lines(text);
+    let table_section_regex = Regex::new(r"(?m)(^Table of Contents$|TABLE OF CONTENTS|Contents$|Content$|INDEX$|CONTENT:$)\n([^\n]*\n){1,100}")
+        .unwrap();
+    let simple_line_regex = Regex::new(r"(\d(\.\d)*|[A-Z]\.|\d+.)\s*[A-Z](\w|\s|[“”\-\(\)\-:,/]|\w\.)*(\s|\.)+\d+")
+        .unwrap();
+
+
+    let mut table_section = find_section(text, table_section_regex);
+    println!("Section head: {}", table_section);
+
+    // in section lot of false positives
+    let mut section = find_lines(&mut table_section, simple_line_regex);
+
+    println!("######### STOP ###########");
+    println!("##### Now content lines #####");
+
     for line in section.iter() {
-        println!("Content line: {}", line);
+        // println!("Content line: {}", line);
         // line = remove_whitespaces(line);
-        // line_info : LineOfContents = extract_line_info(line);
+        let line_info : LineOfContents = extract_line_info(line);
         // res.push(line_info);
     }
     return res;
 }
 
-fn find_lines(text : &String)->Vec<String>{
-    let basic_line_regex = Regex::new(r"(\d(\.\d)*|[A-Z]\.|\d+.)\s*(\w|\s|[“”\-\(\)\-:,/]|\w\.)*(\s|\.)+\d+")
-                            .unwrap();
-    let results: HashSet<String> = basic_line_regex
-        .find_iter(&text)
-        .map(|line| (String::from(line.as_str())).trim().to_string())
-        .collect();
-    results.into_iter().collect()
+fn find_section(text : &String, table_regex: regex::Regex)->String{
+    // let start_table_regex =
+    //     Regex::new(r"(?m)(^Table of Contents$|TABLE OF CONTENTS|Contents$|Content$|INDEX$|CONTENT:$)\n([^\n]*\n){1,100}")
+    //     .unwrap();
+    let head = table_regex.find(text).unwrap();
+    println!("Table of content begins at {}", head.start());
+    head.as_str().to_string()
+
+}
+
+fn find_lines(text : &mut String, line_regex : regex::Regex)->Vec<String>{
+    let mut result : Vec<String> = Vec::new();
+
+    // use regex, because they can be different from lines in the .txt file
+    // let basic_line_regex = Regex::new(r"(\d(\.\d)*|[A-Z]\.|\d+.)\s*[A-Z](\w|\s|[“”\-\(\)\-:,/]|\w\.)*(\s|\.)+\d+")
+    //                         .unwrap();
+
+    let mut offset = 0;
+    while offset < text.len(){
+        if line_regex.is_match(text){
+            let mut line = line_regex.find(text).unwrap();
+            offset = line.end();
+            result.push(line.as_str().to_string());
+
+            crop_letters(text, offset);
+        }
+        // sometimes the regex does not find anything by find (with find_iter does) and this helps
+        else{
+            offset += 1;
+        }
+    }
+    return result;
+
+    // toto funguje, ale je prehazemne
+    // let lines : HashSet<String> = basic_line_regex.find_iter(text).map(|eal| (String::from(eal.as_str())).trim().to_string())
+    //     .collect();
+    // lines.into_iter().collect()
+}
+
+// from here
+// https://stackoverflow.com/questions/38447780/how-to-crop-characters-off-the-beginning-of-a-string-in-rust
+fn crop_letters(s: &mut String, pos: usize) {
+    match s.char_indices().nth(pos) {
+        Some((pos, _)) => {
+            s.drain(..pos);
+        }
+        None => {
+            s.clear();
+        }
+    }
 }
 
 // copy od Pavla
@@ -33,9 +93,29 @@ fn find_lines(text : &String)->Vec<String>{
 //     regex_mul_spaces.replace_all(&t, " ").to_string().trim().to_string()
 // }
 
-// fn extract_line_info(line : String)->LineOfContents{
-//
-// }
+fn extract_line_info(line : &String)->LineOfContents{
+    let mut result = LineOfContents::new();
+    let simple_line_regex = Regex::new(r"(\d(\.\d)*|[A-Z]\.|\d+.)\s*([A-Z](\w|\s|[“”\-\(\)\-:,/]|\w\.)*)(\s|\.)+(\d+)")
+        .unwrap();
+    let caps = simple_line_regex.captures(line).unwrap();
+
+    let section_number = caps.get(1).unwrap().as_str().to_string();
+    let section_title = caps.get(3).unwrap().as_str().to_string();
+
+    //this is not safe, should be OK/Err options
+    let page = caps.get(6).unwrap().as_str().parse::<i32>().unwrap();
+
+    if section_title.len() > CHAPTER_MAX_CHAR{
+        return result;
+    }
+    println!("Number: {}   Title: {}  chars: {} Page: {}", section_number, section_title, section_title.len(), page);
+
+    result.section = section_number;
+    result.title = section_title;
+    result.page = page;
+
+    return result;
+}
 
 
 
