@@ -182,7 +182,7 @@ CC Developer Document                                        4                  
                                                                                                                                                                  Security Target Lite
 Public",
     );
-    println!("FERE!\n");
+
 //    let mut rev = find_revision_history_date_version_info(&text).unwrap();
     let mut rev = find_revision(&text);
     assert_eq!(rev.len(), 5);
@@ -373,7 +373,6 @@ Crypto Library Cobalt on N7021 VA",
     //rev = find_revision_history_version_date_info(&text).unwrap();
     rev = find_revision(&text);
     assert_eq!(rev.len(), 1);
-    assert_eq!(rev.len(), 0);
     assert_eq!(rev[0].version, "2.3");
     assert_eq!(rev[0].date, "2019-06-05");
     assert_eq!(rev[0].description, "Derived from full Security Target v2.3");
