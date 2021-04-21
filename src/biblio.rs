@@ -7,6 +7,7 @@ pub fn find_biblio(text : &String) -> HashMap<String, String> {
     let regex_biblio = Regex::new(r"\d{1,2}\.{0,1}\s+Bibliography[^\.\d\s]*(?s:.)*").unwrap();
     let regex_literature = Regex::new(r"\d{1,2}\.{0,1}\s+(Referenced){0,1}[ ]{0,1}Literature[^\.\d\s]*(?s:.)*").unwrap();
     let regex_references = Regex::new(r"\d{0,2}\.{0,1}\s+References[^\.\d\s]*(?s:.)*").unwrap();
+    let regex_referenced_lit = Regex::new(r"\d{0,2}\.{0,1}\s+REFERENCE DOCUMENTS[^\.\d\s]*(?s:.)*").unwrap();
     let regex_biblio_entry = Regex::new(r"(?m)(^|\s)\[[^\]]+\]\s+([^\[\n]+\n)+").unwrap();
     
     if regex_biblio.is_match(&text) {
@@ -25,9 +26,14 @@ pub fn find_biblio(text : &String) -> HashMap<String, String> {
             .map(|txt| (String::from(txt.as_str())).to_string()) 
             .collect();
     }
+    else if regex_referenced_lit.is_match(&text) {
+        bibliography_section = regex_referenced_lit.find_iter(&text)
+            .map(|txt| (String::from(txt.as_str())).to_string()) 
+            .collect();
+    }
     for i in bibliography_section {
         let text_without_padding = remove_page_ends(&i);
-        let regex_entry_cap = Regex::new(r"(\[[^\]]+\])\s{1,2}(([^\[\n]+\n)+)").unwrap();
+        let regex_entry_cap = Regex::new(r"(\[[A-Z\d][^\]]{0,20}\])\s{1,2}(([^a-z][^\[\n]+\n)+)").unwrap();
         for entry in regex_biblio_entry.find_iter(&text_without_padding) {
 
             // Remove some elements that are not part of the bibliography
@@ -57,6 +63,6 @@ fn remove_whitespaces(text: String) -> String {
 }
 
 pub fn remove_page_ends(text: &String) -> String {
-    let mut line_end = Regex::new(r"(([ ]*\n)*(.*\n){2}[\f](.*\n){2}[^\[]*)").unwrap();
+    let mut line_end = Regex::new(r"(([ ]*\n)*(.*\n){2}[\f])").unwrap();
     String::from(line_end.replace_all(&text, "\n\n\n"))
 }
