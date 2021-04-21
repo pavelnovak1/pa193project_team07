@@ -15,6 +15,21 @@ fn replace_whitespace_with_space(text: &str) -> String {
     result3
 }
 
+
+fn find_and_get_string_after_match(text: &&str, regex_version_start: Regex) -> Option<String> {
+    let mut version_start = regex_version_start.find(&text)?;
+    let (_, version_start_text) = text.split_at(version_start.end());
+    Some(version_start_text.to_string())
+}
+
+
+fn find_and_get_string_before_match(regex_version_end: &Regex, version_start_text: &str) -> Option<String> {
+    let version_end = regex_version_end.find(version_start_text)?;
+    let (version_to_parse, _) = version_start_text.split_at(version_end.start());
+    Some(version_to_parse.to_string())
+}
+
+
 fn find_title_certification_report(text: &str) -> Option<String> {
     let regex_cap_for_from = Regex::new(r"(?:^|\s)(?:\w|\s)+Certification Report\s+Version \d{4}-\d+\s+(?P<title>(.*|\s)*[^\s])\s+Sponsor(?: and developer)?:").unwrap();
     let caps = regex_cap_for_from.captures(text)?;
@@ -34,7 +49,7 @@ fn find_title_for_from(text: &str) -> Option<String> {
 
 
 fn find_title_security_target_lite_before(text: &str) -> Option<String> {
-    let regex_sec_target = Regex::new(r"(?:^|(?:\s*\n\s*\n\s*\n))\s*(?:\s+Common Criteria.*)?(?:(?:Security Target(?: Lite)?)|(?:SECURITY TARGET (?:LITE)?))(?:\s+Common Criteria.*)?(?:\s*(?:EAL.*))?\s+").unwrap();
+    let regex_sec_target = Regex::new(r"(?:^(:?\s*Public\s*)?(?:\s*\n\s*\n\s*\n)?)\s*(?:\s+Common Criteria.*)?(?:(?:Security Target(?: Lite)?)|(?:SECURITY TARGET (?:LITE)?))(?:\s+Common Criteria.*)?(?:\s*(?:EAL.*))?\s+").unwrap();
     let mut result = regex_sec_target.find(&text)?;
     let (_, title_start) = text.split_at(result.end());
     result = find(
@@ -42,16 +57,18 @@ fn find_title_security_target_lite_before(text: &str) -> Option<String> {
         &title_start,
     );
     let (title, _) = title_start.split_at(result.start());
-
     Some(replace_whitespace_with_space(title))
 }
 
 
 fn find_title_security_target_after(text: &str) -> Option<String> {
+    let regex_title_before_security_target = Regex::new(r"\s*Security Target\s+")
+        .unwrap();
     let regex_cap_for_from =
-        Regex::new(r"(?:^|\s)\s*(?:STMicroelectronics)?(?:PUBLIC)?\s*(?P<title>(.|\s)+[^\s])\s*Security Target\s+")
+        Regex::new(r"(?:^|\s)\s*(?:STMicroelectronics)?(?:PUBLIC)?\s*(?P<title>(.|\s)+[^\s])")
             .unwrap();
-    let caps = regex_cap_for_from.captures(text)?;
+    let string_with_title = find_and_get_string_before_match(&regex_title_before_security_target, &text)?;
+    let caps = regex_cap_for_from.captures(&string_with_title)?;
     let title = caps.name("title").unwrap().as_str();
     Some(replace_whitespace_with_space(title))
 }
@@ -77,6 +94,9 @@ pub fn find_title(text: &str) -> String {
     }
     if result.is_none() {
         result = find_title_security_target_after(&text);
+    }
+    if result.is_none() {
+        result = find_title_first_lines(&text);
     }
     result.unwrap()
 }

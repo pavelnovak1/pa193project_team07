@@ -1,0 +1,20 @@
+test_dataset/0782V5b_pdf.txt
+16 (Bug in dataset)
+test_dataset/1022b_pdf.txt
+12 (Fixed)
+test_dataset/1040b_pdf.txt
+19
+test_dataset/1086b_pdf.txt
+19
+test_dataset/1098a_pdf.txt
+18
+test_dataset/1105b_pdf.txt
+15 (Lines before number (Dont know how to solve this))
+test_dataset/1110V3b_pdf.txt
+1 (Don't know, atypical format)
+test_dataset/NSCIB-CC-0023577-CR2-1.0.txt
+19 
+test_dataset/NSCIB-CC_0075541-ST.txt
+0 (Bug in dataset)
+test_dataset/NSCIB-CC-0145426-ST_rev_C-final.txt
+0 (Partially fixed 14pts)

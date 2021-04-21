@@ -1,3 +1,0 @@
-SuperCool Secure Bazmek
-We use 3DES everywhere and hash it. Just believe us.
-EAL0 lol. Okay, can we get EAL1+, please, please, pretty please.
