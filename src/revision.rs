@@ -6,7 +6,7 @@ use crate::cert_info::Revision;
 // TODO uklidit kod
 
 
-fn find_and_get_revision_entries(regex_version_entry: Regex, regex_version_entry_multiline: Regex, version_to_parse: &&str) -> Option<Vec<Revision>> {
+fn find_and_get_revision_entries(regex_version_entry: &Regex, regex_version_entry_multiline: &Regex, version_to_parse: &str) -> Option<Vec<Revision>> {
     let mut res1 = regex_version_entry.find(version_to_parse)?;
     let mut res2 = regex_version_entry.find_at(version_to_parse, res1.end());
 
@@ -28,6 +28,19 @@ fn find_and_get_revision_entries(regex_version_entry: Regex, regex_version_entry
 }
 
 
+fn find_and_get_string_after_match(text: &&str, regex_version_start: Regex) -> Option<String> {
+    let mut version_start = regex_version_start.find(&text)?;
+    let (_, version_start_text) = text.split_at(version_start.end());
+    Some(version_start_text.to_string())
+}
+
+
+fn find_and_get_string_before_match(regex_version_end: &Regex, version_start_text: &str) -> Option<String> {
+    let version_end = regex_version_end.find(version_start_text)?;
+    let (version_to_parse, _) = version_start_text.split_at(version_end.start());
+    Some(version_to_parse.to_string())
+}
+
 fn find_version_control(text: &str) -> Option<Vec<Revision>> {
     let regex_version_start =
         Regex::new(r"Version Control\s+Version\s+Date\s+Author\s+Changes to Previous Version\s+")
@@ -38,14 +51,10 @@ fn find_version_control(text: &str) -> Option<Vec<Revision>> {
     let regex_version_entry = Regex::new(r"(?P<rev>[\w\.]+) +(?P<date>[\d\-]+) +([\w ]+)   +(?P<info>.+)").unwrap();
     let regex_version_entry_multiline = Regex::new(r"(?P<rev>[\w\.]+) +(?P<date>[\d\-]+) +([\w ]+)   +(?P<info>.+(\n {10,25}.+)*)").unwrap();
 
-    let mut version_start = regex_version_start.find(&text)?;
-    println!("{}, {}\n", version_start.start(), version_start.end());
-    let (_, version_start_text) = text.split_at(version_start.end());
-    println!("{:?}\n", version_start_text);
-    let version_end = regex_version_end.find(version_start_text)?;
-    let (version_to_parse, _) = version_start_text.split_at(version_end.start());
+    let version_start_text = find_and_get_string_after_match(&text, regex_version_start)?;
+    let version_to_parse = find_and_get_string_before_match(&regex_version_end, &version_start_text)?;
 
-    let revisions = find_and_get_revision_entries(regex_version_entry, regex_version_entry_multiline, &version_to_parse);
+    let revisions = find_and_get_revision_entries(&regex_version_entry, &regex_version_entry_multiline, &version_to_parse);
     revisions
 }
 
@@ -60,13 +69,10 @@ fn find_revision_history_end(text: &str) -> Option<Vec<Revision>> {
     let regex_version_entry = Regex::new(r"(?P<rev>(?:(?:\w[\w ]+\w)|\d+\.\d+))  +(?P<info>.+)").unwrap();
     let regex_version_entry_multiline = Regex::new(r"(?P<rev>(?:(?:\w[\w ]+\w)|\d+\.\d+))  +(?P<info>.+(\n {10,25}.+)*)").unwrap();
 
-    let mut version_start = regex_version_start.find(&text)?;
-    let (_, version_start_text) = text.split_at(version_start.end());
+    let version_start_text = find_and_get_string_after_match(&text, regex_version_start)?;
+    let version_to_parse = find_and_get_string_before_match(&regex_version_end, &version_start_text)?;
 
-    let version_end = regex_version_end.find(version_start_text)?;
-    let (version_to_parse, _) = version_start_text.split_at(version_end.start());
-
-    let revisions = find_and_get_revision_entries(regex_version_entry, regex_version_entry_multiline, &version_to_parse);
+    let revisions = find_and_get_revision_entries(&regex_version_entry, &regex_version_entry_multiline, &version_to_parse);
     revisions
 }
 
@@ -83,20 +89,12 @@ pub fn find_revision_history_date_version_info(text: &str) -> Option<Vec<Revisio
     let regex_version_entry = Regex::new(r"(?P<date>[\w\d][\w\d\-\. ]+[\w\d])   +(?P<rev>[\w\.]+)  +(?P<info>[\w\- \.]+)").unwrap();
     let regex_version_entry_multiline = Regex::new(r"(?P<date>[\w\d][\w\d\-\. ]+[\w\d])   +(?P<rev>[\w\.]+)  +(?P<info>.+(\n {10,25}.+)*)").unwrap();
 
-    let mut version_start = regex_version_start.find(&text)?;
-    println!("HERE!\n");
-    println!("....\n");
-    println!("{}, {}\n", version_start.start(), version_start.end());
-    let (_, version_start_text) = text.split_at(version_start.end());
-    println!("{:?}\n", version_start_text);
-    let version_end = regex_version_end.find(version_start_text)?;
-    let (version_to_parse, _) = version_start_text.split_at(version_end.start());
+    let version_start_text = find_and_get_string_after_match(&text, regex_version_start)?;
+    let version_to_parse = find_and_get_string_before_match(&regex_version_end, &version_start_text)?;
 
-    let revisions = find_and_get_revision_entries(regex_version_entry, regex_version_entry_multiline, &version_to_parse);
+    let revisions = find_and_get_revision_entries(&regex_version_entry, &regex_version_entry_multiline, &version_to_parse);
     revisions
 }
-
-
 
 pub fn find_revision_history_version_date_info(text: &str) -> Option<Vec<Revision>> {
     let regex_version_start_both =
@@ -116,17 +114,11 @@ pub fn find_revision_history_version_date_info(text: &str) -> Option<Vec<Revisio
         version_start_find = regex_version_start_version_date_info.find(&text);
     }
     let version_start = version_start_find?;
-    println!("....\n");
-    println!("{}, {}\n", version_start.start(), version_start.end());
     let (_, version_start_text) = text.split_at(version_start.end());
-    println!("{:?}\n", version_start_text);
-    let version_end = regex_version_end.find(version_start_text)?;
-    let (version_to_parse, _) = version_start_text.split_at(version_end.start());
 
-    println!("{:?}\n", version_to_parse);
+    let version_to_parse = find_and_get_string_before_match(&regex_version_end, version_start_text)?;
 
-
-    let revisions = find_and_get_revision_entries(regex_version_entry, regex_version_entry_multiline, &version_to_parse);
+    let revisions = find_and_get_revision_entries(&regex_version_entry, &regex_version_entry_multiline, &version_to_parse);
     revisions
 }
 
