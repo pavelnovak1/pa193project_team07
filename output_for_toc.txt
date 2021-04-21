@@ -1,5 +1,5 @@
 test_dataset/0782V5b_pdf.txt
-20
+0
 test_dataset/0879V4a_pdf.txt
 0
 test_dataset/0939V3b_pdf.txt
@@ -61,7 +61,7 @@ test_dataset/Certification_Report_NSCIB-CC-67206-CR4.1.txt
 test_dataset/NSCIB-CC-0011955-CR.txt
 0
 test_dataset/NSCIB-CC-0023577-CR2-1.0.txt
-0
+20
 test_dataset/NSCIB-CC-0075446-CRv2.txt
 0
 test_dataset/NSCIB-CC_0075541-ST.txt
@@ -104,7 +104,7 @@ Average points per file: 0
 ==================================
 Worst results ( points < 30 ):
 test_dataset/0782V5b_pdf.txt:
-20
+0
 test_dataset/0879V4a_pdf.txt:
 0
 test_dataset/0939V3b_pdf.txt:
@@ -166,7 +166,7 @@ test_dataset/Certification_Report_NSCIB-CC-67206-CR4.1.txt:
 test_dataset/NSCIB-CC-0011955-CR.txt:
 0
 test_dataset/NSCIB-CC-0023577-CR2-1.0.txt:
-0
+20
 test_dataset/NSCIB-CC-0075446-CRv2.txt:
 0
 test_dataset/NSCIB-CC_0075541-ST.txt:

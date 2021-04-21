@@ -1,5 +1,5 @@
 test_dataset/0782V5b_pdf.txt
-1
+11
 test_dataset/0879V4a_pdf.txt
 20
 test_dataset/0939V3b_pdf.txt
@@ -29,13 +29,13 @@ test_dataset/1059b_pdf.txt
 test_dataset/1072a_pdf.txt
 20
 test_dataset/1086b_pdf.txt
-1
+20
 test_dataset/1098a_pdf.txt
 20
 test_dataset/1102a_pdf.txt
 20
 test_dataset/1105b_pdf.txt
-1
+20
 test_dataset/1107a_pdf.txt
 20
 test_dataset/1107b_pdf.txt
@@ -43,7 +43,7 @@ test_dataset/1107b_pdf.txt
 test_dataset/1110V2a_pdf.txt
 20
 test_dataset/1110V3b_pdf.txt
-1
+20
 test_dataset/1126a_pdf.txt
 20
 test_dataset/1126b_pdf.txt
@@ -95,16 +95,16 @@ test_dataset/NSCIB-CC-217812-CR2.txt
 test_dataset/SecurityTargetLite_MF2DL_MF2ID_NTAG42x(Tf)_v1.0.txt
 20
 test_dataset/[ST-Lite-EAC]_(v1.1)_2018_2000036361_-_Security_Target_Lite_IDeal_Pass_v2.3-n_(SAC_EAC_Polymorphic).txt
-7
+9
 test_dataset/[ST-Mercury]_Security_Target_Mercury_v3.5.txt
-1
+15
 ==================================
 Total files processed: 50
-Average points per file: 17
+Average points per file: 18
 ==================================
 Worst results ( points < 30 ):
 test_dataset/0782V5b_pdf.txt:
-1
+11
 test_dataset/0879V4a_pdf.txt:
 20
 test_dataset/0939V3b_pdf.txt:
@@ -134,13 +134,13 @@ test_dataset/1059b_pdf.txt:
 test_dataset/1072a_pdf.txt:
 20
 test_dataset/1086b_pdf.txt:
-1
+20
 test_dataset/1098a_pdf.txt:
 20
 test_dataset/1102a_pdf.txt:
 20
 test_dataset/1105b_pdf.txt:
-1
+20
 test_dataset/1107a_pdf.txt:
 20
 test_dataset/1107b_pdf.txt:
@@ -148,7 +148,7 @@ test_dataset/1107b_pdf.txt:
 test_dataset/1110V2a_pdf.txt:
 20
 test_dataset/1110V3b_pdf.txt:
-1
+20
 test_dataset/1126a_pdf.txt:
 20
 test_dataset/1126b_pdf.txt:
@@ -200,9 +200,9 @@ test_dataset/NSCIB-CC-217812-CR2.txt:
 test_dataset/SecurityTargetLite_MF2DL_MF2ID_NTAG42x(Tf)_v1.0.txt:
 20
 test_dataset/[ST-Lite-EAC]_(v1.1)_2018_2000036361_-_Security_Target_Lite_IDeal_Pass_v2.3-n_(SAC_EAC_Polymorphic).txt:
-7
+9
 test_dataset/[ST-Mercury]_Security_Target_Mercury_v3.5.txt:
-1
+15
 test_dataset/0939V3b_pdf.txt - 54pts:
 Problems: Biblio (Numbers)
 test_dataset/1019V2b_pdf.txt - 48pts:

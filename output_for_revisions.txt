@@ -1,15 +1,15 @@
 test_dataset/0782V5b_pdf.txt
-0
+20
 test_dataset/0879V4a_pdf.txt
 20
 test_dataset/0939V3b_pdf.txt
 20
 test_dataset/0945V3a_pdf.txt
-0
+20
 test_dataset/0961V3a_pdf.txt
 20
 test_dataset/0977V2a_pdf.txt
-0
+20
 test_dataset/0977V2b_pdf.txt
 18
 test_dataset/1019V2b_pdf.txt
@@ -23,11 +23,11 @@ test_dataset/1025V3a_pdf.txt
 test_dataset/1040b_pdf.txt
 20
 test_dataset/1051a_pdf.txt
-0
+20
 test_dataset/1059b_pdf.txt
 20
 test_dataset/1072a_pdf.txt
-0
+20
 test_dataset/1086b_pdf.txt
 0
 test_dataset/1098a_pdf.txt
@@ -67,7 +67,7 @@ test_dataset/NSCIB-CC-0075446-CRv2.txt
 test_dataset/NSCIB-CC_0075541-ST.txt
 0
 test_dataset/NSCIB-CC-0095534-CR.txt
-0
+20
 test_dataset/NSCIB-CC-0095534-STLite.txt
 20
 test_dataset/NSCIB-CC-0112113-CR.txt
@@ -83,7 +83,7 @@ test_dataset/nscib-cc-0229285eac-stv1.2.txt
 test_dataset/nscib-cc-0229286sscdkeygen-stv1.2.txt
 20
 test_dataset/NSCIB-CC-0229287-CR_(SSCD-IMP)_NO_eIDAS.txt
-0
+20
 test_dataset/NSCIB-CC-0229287(SSCDkeyImp)-STv1.2.txt
 20
 test_dataset/NSCIB-CC-156530_3-STv3.2.txt
@@ -100,21 +100,21 @@ test_dataset/[ST-Mercury]_Security_Target_Mercury_v3.5.txt
 20
 ==================================
 Total files processed: 50
-Average points per file: 15
+Average points per file: 18
 ==================================
 Worst results ( points < 30 ):
 test_dataset/0782V5b_pdf.txt:
-0
+20
 test_dataset/0879V4a_pdf.txt:
 20
 test_dataset/0939V3b_pdf.txt:
 20
 test_dataset/0945V3a_pdf.txt:
-0
+20
 test_dataset/0961V3a_pdf.txt:
 20
 test_dataset/0977V2a_pdf.txt:
-0
+20
 test_dataset/0977V2b_pdf.txt:
 18
 test_dataset/1019V2b_pdf.txt:
@@ -128,11 +128,11 @@ test_dataset/1025V3a_pdf.txt:
 test_dataset/1040b_pdf.txt:
 20
 test_dataset/1051a_pdf.txt:
-0
+20
 test_dataset/1059b_pdf.txt:
 20
 test_dataset/1072a_pdf.txt:
-0
+20
 test_dataset/1086b_pdf.txt:
 0
 test_dataset/1098a_pdf.txt:
@@ -172,7 +172,7 @@ test_dataset/NSCIB-CC-0075446-CRv2.txt:
 test_dataset/NSCIB-CC_0075541-ST.txt:
 0
 test_dataset/NSCIB-CC-0095534-CR.txt:
-0
+20
 test_dataset/NSCIB-CC-0095534-STLite.txt:
 20
 test_dataset/NSCIB-CC-0112113-CR.txt:
@@ -188,7 +188,7 @@ test_dataset/nscib-cc-0229285eac-stv1.2.txt:
 test_dataset/nscib-cc-0229286sscdkeygen-stv1.2.txt:
 20
 test_dataset/NSCIB-CC-0229287-CR_(SSCD-IMP)_NO_eIDAS.txt:
-0
+20
 test_dataset/NSCIB-CC-0229287(SSCDkeyImp)-STv1.2.txt:
 20
 test_dataset/NSCIB-CC-156530_3-STv3.2.txt:
