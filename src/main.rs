@@ -6,6 +6,7 @@ mod title;
 mod biblio;
 mod revision;
 mod tools;
+mod table_of_contents;
 
 use std::env;
 use crate::extract_info::extract_info;
@@ -13,9 +14,13 @@ use crate::write_info::write;
 use crate::cert_info::Certificate;
 
 fn main() {
+
     let args: Vec<String> = env::args().collect();
+    // println!("Arguments are");
+    // println!("{:?}", args);
 
     let config = Config::new(&args);
+    // println!("{}", config.input_filename);
 
     //(pretty print) queries zatim nebudou
 

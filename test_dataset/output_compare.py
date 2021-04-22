@@ -1,4 +1,4 @@
-#!/bin/env python3
+#!/usr/bin/env python3
 import json
 import math
 import sys
@@ -77,21 +77,31 @@ def check_toc(actual, expected):
     max_score = 5 * len(expected)
     score = 0
 
+    # print("Len expected is ", len(expected))
+    # print("Len actual is", len(actual))
     actual_numbers = list(map(lambda x: x[0], actual))
     expected_numbers = list(map(lambda x: x[0], expected))
     score += len(expected) * SequenceMatcher(None, actual_numbers, expected_numbers).ratio()
+    # print(actual_numbers)
+    # print(expected_numbers)
+    # print("Score after numbers", score)
 
     actual_sections = list(map(lambda x: x[1], actual))
     expected_sections = list(map(lambda x: x[1], expected))
     score += len(expected) * SequenceMatcher(None, actual_sections, expected_sections).ratio()
+    # print("Score after sections", score)
 
     actual_pages = list(map(lambda x: x[2], actual))
     expected_pages = list(map(lambda x: x[2], expected))
     score += len(expected) * SequenceMatcher(None, actual_pages, expected_pages).ratio()
+    # print("Score after pages", score)
 
     for item in actual:
+        # print(item)
         if item in expected:
             score += 2
+            # print("Yes")
+    # print("Score after items", score, max_score)
 
     return 20 * score / max_score
 
@@ -166,16 +176,19 @@ def main():
     expected = load_file(sys.argv[1])
     actual = load_file(sys.argv[2])
 
-    checks = (check_title, check_versions, check_toc, check_revisions, check_bibliography)
+    # checks = (check_title, check_versions, check_toc, check_revisions, check_bibliography)
+    checks = (check_toc,)
     points = 0
     for check in checks:
-        points += check(actual, expected)
+        p = check(actual, expected)
+        # print(p)
+        points += p
 
     print(math.ceil(points))
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print(f"USAGE: {sys.argv[0]} <reference_json> <output_json>", file=sys.stderr)
+        # print(f"USAGE: {sys.argv[0]} <reference_json> <output_json>", file=sys.stderr)
         sys.exit(1)
 
     main()

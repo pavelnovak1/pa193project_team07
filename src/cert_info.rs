@@ -1,16 +1,17 @@
 use std::collections::HashMap;
 
 use regex::Captures;
-use serde::Serialize;
+use serde::{Serialize, Serializer};
 
 use crate::tools;
+use serde::ser::SerializeSeq;
 
 #[derive(Serialize)]
 pub struct Certificate {
     pub title: String,
     pub versions: Versions,
     pub bibliography: HashMap<String, String>,
-    pub table_of_contents: Vec<(String, String)>,
+    pub table_of_contents: Vec<LineOfContents>,
     pub revisions: Vec<Revision>,
 }
 
@@ -56,6 +57,37 @@ impl Versions {
             ecc: vec![],
             des: vec![],
         };
+    }
+}
+
+
+pub struct LineOfContents{
+    pub section : String,
+    pub title : String,
+    pub page : i32
+}
+
+impl LineOfContents{
+    pub fn new()->LineOfContents{
+        return LineOfContents {
+            section: String::new(),
+            title: String::new(),
+            page: 0
+        }
+    }
+}
+
+impl Serialize for LineOfContents{
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+    {
+        // 3 is the number of fields in the struct.
+        let mut seq = serializer.serialize_seq(Option::from(3 as usize))?;
+        seq.serialize_element(&self.section)?;
+        seq.serialize_element(&self.title)?;
+        seq.serialize_element(&self.page)?;
+        seq.end()
     }
 }
 

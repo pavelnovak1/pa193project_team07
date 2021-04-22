@@ -6,6 +6,7 @@ use crate::biblio::{find_biblio, remove_page_ends};
 use crate::cert_info::*;
 use crate::revision::find_revision;
 use crate::title::find_title;
+use crate::table_of_contents::find_table_of_content;
 use crate::versions::find_versions;
 
 pub(crate) fn extract_info(filename: &String) -> Certificate {
@@ -23,5 +24,6 @@ pub(crate) fn extract_info(filename: &String) -> Certificate {
     certificate.versions = find_versions(&cert_text);
     certificate.bibliography = find_biblio(&cert_text);
     certificate.revisions = find_revision(&cert_text);
+    certificate.table_of_contents = find_table_of_content(&cert_text);
     certificate
 }
