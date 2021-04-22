@@ -32,13 +32,10 @@ pub fn find_table_of_content(text : &String)->Vec<LineOfContents>{
     // println!("##### Now content lines #####");
 
     if dots_regex.is_match(&table_section) {
-        // println!("Is match with dots");
-        // in section lot of false positives
         section = find_lines(&mut table_section, simple_line_regex.clone());
         parse_lines(&mut res, simple_line_regex, &mut section);
     }
     else {
-        // println!("No match with dots");
         section = find_lines(&mut table_section, no_dots_line_regex.clone());
         parse_lines(&mut res, simple_line_regex, &mut section);
     }
@@ -61,23 +58,35 @@ fn parse_lines(res: &mut Vec<LineOfContents>, regex: Regex, section: &mut Vec<St
 
 fn find_section(text : &String, table_regex: regex::Regex)->String{
     let mut text_clone = text.clone();
-    let wrong_header_regex = Regex::new(r"Info(rmation)?\s+Content\s+Keywords").unwrap();
-    if wrong_header_regex.is_match(&text_clone){
-        let offset = wrong_header_regex.find(text).unwrap().end();
-        crop_letters(&mut text_clone, offset);
-    }
+
+    erase_wrong_beginning(&mut text_clone);
 
     let mut head = table_regex.find(&text_clone).unwrap();
-    let second_wrong_header_regex = Regex::new(r"Content\s+Manager").unwrap();
 
+    let second_wrong_header_regex = Regex::new(r"Content\s+Manager").unwrap();
     if second_wrong_header_regex.is_match(head.as_str()){
-        let offset = second_wrong_header_regex.find(text).unwrap().end();
+        let offset = second_wrong_header_regex.find(&*text_clone).unwrap().end();
         crop_letters(&mut text_clone, offset);
         head = table_regex.find(&text_clone).unwrap();
     }
-    // println!("Table of content begins at {}", head.start());
+
+    let third_wrong_header_regex = Regex::new(r"Default\sPersonalisation\sContent|Content\s+Tab").unwrap();
+    while third_wrong_header_regex.is_match(head.as_str()){
+        let offset = third_wrong_header_regex.find(&*text_clone).unwrap().end();
+        crop_letters(&mut text_clone, offset);
+        head = table_regex.find(&text_clone).unwrap();
+    }
+
     head.as_str().to_string()
 
+}
+
+fn erase_wrong_beginning(mut text_clone: &mut String) {
+    let wrong_header_regex = Regex::new(r"Info(rmation)?\s+Content\s+Keywords").unwrap();
+    if wrong_header_regex.is_match(&text_clone) {
+        let offset = wrong_header_regex.find(&*text_clone).unwrap().end();
+        crop_letters(&mut text_clone, offset);
+    }
 }
 
 fn find_lines(text : &mut String, line_regex : regex::Regex)->Vec<String>{
@@ -90,7 +99,6 @@ fn find_lines(text : &mut String, line_regex : regex::Regex)->Vec<String>{
             let mut line = line_regex.find(text).unwrap();
             offset = line.end();
             result.push(line.as_str().to_string());
-
             crop_letters(text, offset);
         }
         // sometimes the regex does not find anything by find (with find_iter does) and this helps
@@ -99,11 +107,6 @@ fn find_lines(text : &mut String, line_regex : regex::Regex)->Vec<String>{
         }
     }
     return result;
-
-    // toto funguje, ale je prehazemne
-    // let lines : HashSet<String> = basic_line_regex.find_iter(text).map(|eal| (String::from(eal.as_str())).trim().to_string())
-    //     .collect();
-    // lines.into_iter().collect()
 }
 
 // from here
