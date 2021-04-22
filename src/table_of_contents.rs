@@ -27,9 +27,9 @@ pub fn find_table_of_content(text : &String)->Vec<LineOfContents>{
     let mut table_section = find_section(text, table_section_regex);
     let mut section= Vec::new();
 
-    println!("Section head: {}", table_section);
-    println!("######### STOP ###########");
-    println!("##### Now content lines #####");
+    // println!("Section head: {}", table_section);
+    // println!("######### STOP ###########");
+    // println!("##### Now content lines #####");
 
     if dots_regex.is_match(&table_section) {
         // println!("Is match with dots");
@@ -144,8 +144,8 @@ fn extract_line_info(line : &String, regex : regex::Regex, last_page : i32)->Lin
         return result;
     }
 
-    println!("Number: {}   Title: {}  chars: {} Page: {} Last page: {}",
-             section_number, section_title, section_title.len(), page, last_page);
+    // println!("Number: {}   Title: {}  chars: {} Page: {} Last page: {}",
+    //          section_number, section_title, section_title.len(), page, last_page);
 
     result.section = section_number;
     result.title = section_title;
