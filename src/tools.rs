@@ -1,4 +1,3 @@
-use regex::{Captures, Match};
 use regex::Regex;
 
 pub fn replace_whitespace_with_space(text: &str) -> String {

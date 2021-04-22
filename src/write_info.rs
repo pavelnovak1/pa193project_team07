@@ -1,5 +1,4 @@
 use crate::Certificate;
-use serde_json::Result;
 use regex::Regex;
 use std::fs;
 

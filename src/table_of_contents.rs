@@ -1,7 +1,5 @@
 use regex::Regex;
-use std::collections::HashSet;
 use crate::cert_info::LineOfContents;
-use regex::internal::Input;
 
 const CHAPTER_MAX_CHAR:usize = 100;
 const CHAPTER_MIN_CHAR:usize = 5;

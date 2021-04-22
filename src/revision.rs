@@ -1,4 +1,3 @@
-use regex::{Captures, Match};
 use regex::Regex;
 
 use crate::cert_info::Revision;

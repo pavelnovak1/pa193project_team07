@@ -42,7 +42,7 @@ pub fn find_biblio(text : &String) -> HashMap<String, String> {
             }
             
             let caps = match regex_entry_cap.captures(entry.as_str()) { 
-                Some(T) => T,
+                Some(t) => t,
                 None => continue,
             };
             let name = remove_whitespaces(String::from(caps.get(1).unwrap().as_str()));
@@ -58,11 +58,11 @@ pub fn find_biblio(text : &String) -> HashMap<String, String> {
 fn remove_whitespaces(text: String) -> String {
     let regex_mul_spaces = Regex::new(r"\s+").unwrap();
     let regex_dash_nl = Regex::new(r"-\n\s+").unwrap();
-    let mut t = regex_dash_nl.replace_all(&text, "-").to_string();
+    let t = regex_dash_nl.replace_all(&text, "-").to_string();
     regex_mul_spaces.replace_all(&t, " ").to_string().trim().to_string()
 }
 
 pub fn remove_page_ends(text: &String) -> String {
-    let mut line_end = Regex::new(r"(([ ]*\n)*(.*\n){2}[\f])").unwrap();
+    let line_end = Regex::new(r"(([ ]*\n)*(.*\n){2}[\f])").unwrap();
     String::from(line_end.replace_all(&text, "\n\n\n"))
 }
