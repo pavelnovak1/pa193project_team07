@@ -129,7 +129,7 @@ fn extract_line_info(line : &String, regex : regex::Regex, last_page : i32)->Lin
     }
 
     let mut section_title = caps.get(3).unwrap().as_str().to_string();
-    if section_title.chars().last().unwrap().eq(&' '){
+    while section_title.chars().last().unwrap().eq(&' '){
         section_title.pop();
     }
     //this is not safe, should be OK/Err options
