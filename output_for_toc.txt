@@ -102,7 +102,7 @@ test_dataset/[ST-Mercury]_Security_Target_Mercury_v3.5.txt
 Total files processed: 50
 Average points per file: 0
 ==================================
-Worst results ( points < 30 ):
+Worst results ( points < 15 ):
 test_dataset/0782V5b_pdf.txt:
 0
 test_dataset/0879V4a_pdf.txt:
@@ -165,8 +165,6 @@ test_dataset/Certification_Report_NSCIB-CC-67206-CR4.1.txt:
 0
 test_dataset/NSCIB-CC-0011955-CR.txt:
 0
-test_dataset/NSCIB-CC-0023577-CR2-1.0.txt:
-20
 test_dataset/NSCIB-CC-0075446-CRv2.txt:
 0
 test_dataset/NSCIB-CC_0075541-ST.txt:
@@ -203,29 +201,3 @@ test_dataset/[ST-Lite-EAC]_(v1.1)_2018_2000036361_-_Security_Target_Lite_IDeal_P
 0
 test_dataset/[ST-Mercury]_Security_Target_Mercury_v3.5.txt:
 0
-test_dataset/0939V3b_pdf.txt - 54pts:
-Problems: Biblio (Numbers)
-test_dataset/1019V2b_pdf.txt - 48pts:
-Problems: Biblio (Numbers)
-test_dataset/1022b_pdf.txt - 40pts:
-Problems: Biblio (References missing)
-test_dataset/1040b_pdf.txt - 52pts:
-Problems: Biblio (References missing)
-test_dataset/1059b_pdf.txt - 56pts:
-Problems: Biblio (Numbers)
-test_dataset/1107b_pdf.txt - 33pts:
-Problems: Versions, Biblio (References)
-test_dataset/anssi-cible-cc-2020_72en.txt - 55pts
-Problems: Biblio (References missing)
-test_dataset/NSCIB-CC_0075541-ST.txt - 19pts
-Problems: Title
-test_dataset/NSCIB-CC-0095534-STLite.txt - 53pts
-Problems: Biblio (Number)
-test_dataset/NSCIB-CC-0145426-ST_rev_C-final.txt - 11pts
-Problems: Title (spatny original .json), Biblio (REFERENCED LITERATURE)
-test_dataset/nscib-cc-0229285eac-stv1.2.txt - 48pts
-Problems: Biblio (references)
-test_dataset/nscib-cc-0229286sscdkeygen-stv1.2.txt - 43pts
-Problems: Biblio (references)
-test_dataset/NSCIB-CC-0229287(SSCDkeyImp)-STv1.2.txt - 42pts
-Problems: Biblio (references)
