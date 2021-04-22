@@ -9,26 +9,44 @@ const TABLE_MAX_LINE:usize = 100;
 pub fn find_table_of_content(text : &String)->Vec<LineOfContents>{
     let mut res : Vec<LineOfContents> = Vec::new();
 
-    let table_section_regex = Regex::new(r"(?m)(Table of Contents$|TABLE OF CONTENTS|Contents$|Content$|INDEX$|CONTENTS:$)\n([^\n]*\n){1,150}")
+    let table_section_regex =
+        Regex::new(r"(?m)(Table of Contents$|TABLE OF CONTENTS|Contents$|Content$|INDEX$|CONTENTS:$)\n([^\n]*\n){1,150}")
         .unwrap();
-    let simple_line_regex = Regex::new(r"(\d{1,2}(\.\d)*|[A-Z]\.|\d{1,2}.)\s*([A-Z](\w|\s|[“”\-\(\)\-:,/]|\w\.)*)(\s|\.)+(\d+)")
+    // this regex works on base cases
+    // (\d{1,2}(\.\d)*|[A-Z]\.|\d{1,2}.)\s*([A-Z](\w|\s|[“”\-\(\)\-:,/]|\w\.)*)(\s|\.)+(\d+)
+    let simple_line_regex =
+        Regex::new(r"(\d{1,2}(\.\d)*|[A-Z]\.|\d{1,2}.)\s*([A-Z](\w|\s|[“”\-\(\)\-:,/]|\w\.)*)(\s|\.)+(\d+)")
         .unwrap();
-
+    let dots_regex = Regex::new(r"(\.|\.\s){10,}").unwrap();
+    let no_dots_line_regex =
+        Regex::new(r"(\d{1,2}(\.\d)*|[A-Z]\.|\d{1,2}.)\s*([A-Z]((\w|[“”\-\(\)\-:,/]|\w\.)+\s?)+)(\s|\.)+(\d+)")
+            .unwrap();
 
     let mut table_section = find_section(text, table_section_regex);
+    let mut section= Vec::new();
     // println!("Section head: {}", table_section);
-
-    // in section lot of false positives
-    let mut section = find_lines(&mut table_section, simple_line_regex.clone());
-
     // println!("######### STOP ###########");
     // println!("##### Now content lines #####");
+    if dots_regex.is_match(&table_section) {
+        // println!("Is match with dots");
+        // in section lot of false positives
+        section = find_lines(&mut table_section, simple_line_regex.clone());
+        parse_lines(&mut res, simple_line_regex, &mut section);
+    }
+    else {
+        // println!("No match with dots");
+        section = find_lines(&mut table_section, no_dots_line_regex.clone());
+        parse_lines(&mut res, simple_line_regex, &mut section);
+    }
+    return res;
+}
 
-    let mut last_page : i32 = 0;
+fn parse_lines(res: &mut Vec<LineOfContents>, regex: Regex, section: &mut Vec<String>) {
+    let mut last_page: i32 = 0;
     for line in section.iter() {
         // println!("Content line: {}", line);
         // line = remove_whitespaces(line);
-        let line_info : LineOfContents = extract_line_info(line, simple_line_regex.clone(), last_page);
+        let line_info: LineOfContents = extract_line_info(line, regex.clone(), last_page);
         if !line_info.title.is_empty() {
             res.push(line_info);
         }
@@ -36,7 +54,6 @@ pub fn find_table_of_content(text : &String)->Vec<LineOfContents>{
             last_page = res[res.len() - 1].page;
         }
     }
-    return res;
 }
 
 fn find_section(text : &String, table_regex: regex::Regex)->String{
@@ -93,9 +110,6 @@ fn crop_letters(s: &mut String, pos: usize) {
 
 fn extract_line_info(line : &String, regex : regex::Regex, last_page : i32)->LineOfContents{
     let mut result = LineOfContents::new();
-    // let simple_line_regex =
-    //     Regex::new(r"(\d{1,2}(\.\d)*|[A-Z]\.|\d{1,2}\.)\s*([A-Z](\w|\s|[“”\-\(\)\-:,/]|\w\.)*)(\s|\.)+(\d+)")
-    //     .unwrap();
     let caps = regex.captures(line).unwrap();
 
     let mut section_number = caps.get(1).unwrap().as_str().to_string();
