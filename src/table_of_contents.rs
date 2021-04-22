@@ -4,7 +4,9 @@ use crate::cert_info::LineOfContents;
 use regex::internal::Input;
 
 const CHAPTER_MAX_CHAR:usize = 100;
+const CHAPTER_MIN_CHAR:usize = 5;
 const TABLE_MAX_LINE:usize = 100;
+const CERT_MAX_PAGE:i32 = 200;
 
 pub fn find_table_of_content(text : &String)->Vec<LineOfContents>{
     let mut res : Vec<LineOfContents> = Vec::new();
@@ -24,9 +26,11 @@ pub fn find_table_of_content(text : &String)->Vec<LineOfContents>{
 
     let mut table_section = find_section(text, table_section_regex);
     let mut section= Vec::new();
-    // println!("Section head: {}", table_section);
-    // println!("######### STOP ###########");
-    // println!("##### Now content lines #####");
+
+    println!("Section head: {}", table_section);
+    println!("######### STOP ###########");
+    println!("##### Now content lines #####");
+
     if dots_regex.is_match(&table_section) {
         // println!("Is match with dots");
         // in section lot of false positives
@@ -45,7 +49,6 @@ fn parse_lines(res: &mut Vec<LineOfContents>, regex: Regex, section: &mut Vec<St
     let mut last_page: i32 = 0;
     for line in section.iter() {
         // println!("Content line: {}", line);
-        // line = remove_whitespaces(line);
         let line_info: LineOfContents = extract_line_info(line, regex.clone(), last_page);
         if !line_info.title.is_empty() {
             res.push(line_info);
@@ -63,7 +66,15 @@ fn find_section(text : &String, table_regex: regex::Regex)->String{
         let offset = wrong_header_regex.find(text).unwrap().end();
         crop_letters(&mut text_clone, offset);
     }
-    let head = table_regex.find(&text_clone).unwrap();
+
+    let mut head = table_regex.find(&text_clone).unwrap();
+    let second_wrong_header_regex = Regex::new(r"Content\s+Manager").unwrap();
+
+    if second_wrong_header_regex.is_match(head.as_str()){
+        let offset = second_wrong_header_regex.find(text).unwrap().end();
+        crop_letters(&mut text_clone, offset);
+        head = table_regex.find(&text_clone).unwrap();
+    }
     // println!("Table of content begins at {}", head.start());
     head.as_str().to_string()
 
@@ -116,18 +127,25 @@ fn extract_line_info(line : &String, regex : regex::Regex, last_page : i32)->Lin
     if section_number.chars().last().unwrap().eq(&'.'){
         section_number.pop();
     }
-    let section_title = caps.get(3).unwrap().as_str().to_string();
+
+    let mut section_title = caps.get(3).unwrap().as_str().to_string();
+    if section_title.chars().last().unwrap().eq(&' '){
+        section_title.pop();
+    }
     //this is not safe, should be OK/Err options
     let page = caps.get(6).unwrap().as_str().parse::<i32>().unwrap();
 
-    if section_title.len() > CHAPTER_MAX_CHAR{
+
+    if section_title.len() > CHAPTER_MAX_CHAR || section_title.len() < CHAPTER_MIN_CHAR {
         return result;
     }
-    if last_page > page {
+    // last_page > page ||
+    if  last_page > page || page > CERT_MAX_PAGE {
         return result;
     }
-    // println!("Number: {}   Title: {}  chars: {} Page: {} Last page: {}",
-    //          section_number, section_title, section_title.len(), page, last_page);
+
+    println!("Number: {}   Title: {}  chars: {} Page: {} Last page: {}",
+             section_number, section_title, section_title.len(), page, last_page);
 
     result.section = section_number;
     result.title = section_title;
