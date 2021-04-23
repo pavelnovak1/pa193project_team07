@@ -1,6 +1,8 @@
-use crate::cert_info::Versions;
-use regex::Regex;
 use std::collections::HashSet;
+
+use regex::Regex;
+
+use crate::cert_info::Versions;
 
 /// Main function used to extract version information from given text.
 /// This function return a `Version` struct containing all extracted information
@@ -13,7 +15,7 @@ use std::collections::HashSet;
 ///
 /// `Version` struct, filled with all version information extracted from certificate
 ///
-pub fn find_versions(text: &String) -> Versions {
+pub fn find_versions(text: &str) -> Versions {
     let mut result = Versions::new();
 
     result.eal = find_eal(&text);
@@ -23,7 +25,7 @@ pub fn find_versions(text: &String) -> Versions {
     result.rsa = find_rsa(&text);
     result.ecc = find_ecc(&text);
     result.des = find_des(&text);
-    return result;
+    result
 }
 
 /// Returns vector of strings containing all _unique_ and both sides trimmed pieces of text that fits to given regular expression in
@@ -38,7 +40,7 @@ pub fn find_versions(text: &String) -> Versions {
 ///
 /// Vector of strings containing all unique and trimmed occurences of regular expression in text
 ///
-fn find(regex: regex::Regex, text: &String) -> Vec<String> {
+fn find(regex: regex::Regex, text: &str) -> Vec<String> {
     let results: HashSet<String> = regex
         .find_iter(&text)
         .map(|eal| (String::from(eal.as_str())).trim().to_string())
@@ -54,10 +56,10 @@ fn find(regex: regex::Regex, text: &String) -> Vec<String> {
 ///
 /// # Return
 /// Vector of strings containing all unique EAL versions in certificate
-fn find_eal(text: &String) -> Vec<String> {
+fn find_eal(text: &str) -> Vec<String> {
     find(
         Regex::new(r"(^|\s)EAL\s{0,1}\d{1}\s{0,1}\+{0,1}").unwrap(),
-        &text,
+        text,
     )
 }
 
@@ -70,33 +72,32 @@ fn find_eal(text: &String) -> Vec<String> {
 /// # Return
 /// Vector of strings containing all unique global platform versions in certificate
 
-fn find_gp(text: &String) -> Vec<String>{
+fn find_gp(text: &str) -> Vec<String> {
     find(Regex::new(r"[Gg]lobal\s*[Pp]latform\s*\d(\.\d)*").unwrap(), &text)
 }
 
-fn find_java_card(text: &String) -> Vec<String>{
+fn find_java_card(text: &str) -> Vec<String> {
     find(Regex::new(r"[Jj]ava\s*[Cc]ard\s*\d(\.\d)*").unwrap(), &text)
 }
 
-fn find_sha(text: &String) -> Vec<String>{
+fn find_sha(text: &str) -> Vec<String> {
     find(Regex::new(r"(SHA|sha)(\s*|-|_)?\d(\d\d)?(/\d\d\d)?").unwrap(), &text)
 }
 
-fn find_rsa(text: &String) -> Vec<String>{
+fn find_rsa(text: &str) -> Vec<String> {
     find(Regex::new(r"(RSA|rsa)(\s*|-|_)?(\d\d\d\d|CRT|SignaturePKCS1|PSS|SSA-PSS)(/\d\d\d\d)?").unwrap(), &text)
 }
 
-fn find_ecc(text: &String) -> Vec<String>{
+fn find_ecc(text: &str) -> Vec<String> {
     find(Regex::new(r"(ECC|ecc|ECDSA|ecdsa)(\s*|-|_)?\d\d\d\d?").unwrap(), &text)
 }
 
-fn find_des(text: &String) -> Vec<String>{
+fn find_des(text: &str) -> Vec<String> {
     find(Regex::new(r"(([Tt]riple|T|3|[Ss]ingle|[Ss]imple)(\s*|-|_)?(DES|des))|((des|DES)3)").unwrap(), &text)
 }
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
 
     #[test]

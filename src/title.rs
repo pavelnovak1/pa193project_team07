@@ -1,6 +1,8 @@
 use regex::Match;
 use regex::Regex;
 
+use crate::tools::*;
+
 /*
 test_dataset/0782V5b_pdf.txt  --  11  -- tohle ai nepujde vylepsit
 test_dataset/1126b_pdf.txt  --  18  -- nejde, spatne expected ?
@@ -18,7 +20,7 @@ fn find(regex: regex::Regex, text: &str) -> Match {
     let results = regex.find(&text).unwrap();
     results
 }
-
+/*
 fn replace_whitespace_with_space(text: &str) -> String {
     let mut re = Regex::new(r"[--]\s*\n\s*").unwrap();
     let result = String::from(re.replace_all(text, "-"));
@@ -27,10 +29,10 @@ fn replace_whitespace_with_space(text: &str) -> String {
     let result3 = String::from(result2);
     result3
 }
-
-
+*/
+/*
 fn find_and_get_string_after_match(text: &&str, regex_version_start: Regex) -> Option<String> {
-    let mut version_start = regex_version_start.find(&text)?;
+    let version_start = regex_version_start.find(&text)?;
     let (_, version_start_text) = text.split_at(version_start.end());
     Some(version_start_text.to_string())
 }
@@ -41,7 +43,7 @@ fn find_and_get_string_before_match(regex_version_end: &Regex, version_start_tex
     let (version_to_parse, _) = version_start_text.split_at(version_end.start());
     Some(version_to_parse.to_string())
 }
-
+*/
 
 fn find_title_certification_report(text: &str) -> Option<String> {
     let regex_cap_for_from = Regex::new(r"(?:^|\s)(?:\w|\s)+Certification Report\s+Version \d{4}-\d+\s+(?P<title>(.*|\s)*[^\s])\s+Sponsor(?: and developer)?:").unwrap();

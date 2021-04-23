@@ -1,7 +1,8 @@
 use std::collections::{HashMap, HashSet};
+
 use regex::Regex;
 
-pub fn find_biblio(text : &String) -> HashMap<String, String> {
+pub fn find_biblio(text: &str) -> HashMap<String, String> {
     let mut bibliography_result = HashMap::<String, String>::new();
     let mut bibliography_section = HashSet::<String>::new();
     let regex_biblio = Regex::new(r"\d{1,2}\.{0,1}\s+Bibliography[^\.\d\s]*(?s:.)*").unwrap();
@@ -9,7 +10,7 @@ pub fn find_biblio(text : &String) -> HashMap<String, String> {
     let regex_references = Regex::new(r"\d{0,2}\.{0,1}\s+References[^\.\d\s]*(?s:.)*").unwrap();
     let regex_referenced_lit = Regex::new(r"\d{0,2}\.{0,1}\s+REFERENCE DOCUMENTS[^\.\d\s]*(?s:.)*").unwrap();
     let regex_biblio_entry = Regex::new(r"(?m)(^|\s)\[[^\]]+\]\s+([^\[\n]+\n)+").unwrap();
-    
+
     if regex_biblio.is_match(&text) {
         bibliography_section = regex_biblio.find_iter(&text)
             .map(|txt| (String::from(txt.as_str())).to_string()) 
@@ -37,7 +38,7 @@ pub fn find_biblio(text : &String) -> HashMap<String, String> {
         for entry in regex_biblio_entry.find_iter(&text_without_padding) {
 
             // Remove some elements that are not part of the bibliography
-            if String::from(entry.as_str()).contains("..") || String::from(entry.as_str()).contains("|") {
+            if String::from(entry.as_str()).contains("..") || String::from(entry.as_str()).contains('|') {
                 continue;
             }
             
@@ -62,7 +63,7 @@ fn remove_whitespaces(text: String) -> String {
     regex_mul_spaces.replace_all(&t, " ").to_string().trim().to_string()
 }
 
-pub fn remove_page_ends(text: &String) -> String {
+pub fn remove_page_ends(text: &str) -> String {
     let line_end = Regex::new(r"(([ ]*\n)*(.*\n){2}[\f])").unwrap();
     String::from(line_end.replace_all(&text, "\n\n\n"))
 }

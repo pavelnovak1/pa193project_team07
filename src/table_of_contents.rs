@@ -1,4 +1,5 @@
 use regex::Regex;
+
 use crate::cert_info::LineOfContents;
 
 const CHAPTER_MAX_CHAR:usize = 100;
@@ -94,7 +95,7 @@ fn find_lines(text : &mut String, line_regex : regex::Regex)->Vec<String>{
     let mut offset = 0;
     while offset < text.len(){
         if line_regex.is_match(text){
-            let mut line = line_regex.find(text).unwrap();
+            let line = line_regex.find(text).unwrap();
             offset = line.end();
             result.push(line.as_str().to_string());
             crop_letters(text, offset);
@@ -104,7 +105,7 @@ fn find_lines(text : &mut String, line_regex : regex::Regex)->Vec<String>{
             offset += 1;
         }
     }
-    return result;
+    result
 }
 
 // from here
@@ -152,7 +153,7 @@ fn extract_line_info(line : &String, regex : regex::Regex, last_page : i32)->Lin
     result.title = section_title;
     result.page = page;
 
-    return result;
+    result
 }
 
 
