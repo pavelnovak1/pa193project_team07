@@ -1,7 +1,7 @@
 use crate::cert_info::Versions;
 use regex::Regex;
 use std::collections::HashSet;
-
+use crate::tools::replace_whitespace_with_space;
 /// Main function used to extract version information from given text.
 /// This function return a `Version` struct containing all extracted information
 ///
@@ -41,7 +41,8 @@ pub fn find_versions(text: &String) -> Versions {
 fn find(regex: regex::Regex, text: &String) -> Vec<String> {
     let results: HashSet<String> = regex
         .find_iter(&text)
-        .map(|eal| (String::from(eal.as_str())).trim().to_string())
+        // .map(|m| (String::from(m.as_str())).trim().to_string())
+        .map(|m| (replace_whitespace_with_space(m.as_str())).trim().to_string())
         .collect();
     results.into_iter().collect()
 }
@@ -55,10 +56,22 @@ fn find(regex: regex::Regex, text: &String) -> Vec<String> {
 /// # Return
 /// Vector of strings containing all unique EAL versions in certificate
 fn find_eal(text: &String) -> Vec<String> {
-    find(
-        Regex::new(r"(^|\s)EAL\s{0,1}\d{1}\s{0,1}\+{0,1}").unwrap(),
+    let mut result = find(
+        Regex::new(r"(^|\s|\()EAL\s?\d\s?\+?").unwrap(),
         &text,
-    )
+    );
+    for s in result.clone() {
+        if s.starts_with("("){
+            // from here https://stackoverflow.com/questions/26243025/remove-an-element-from-a-vector
+            let index = result.iter().position(|x| x.starts_with("(")).unwrap();
+            let new_s = s.strip_prefix("(").unwrap().to_string();
+            result.remove(index);
+            result.push(new_s);
+        }
+    }
+    result.sort();
+    result.dedup();
+    return result
 }
 
 /// Wrapper - Return all occurences of global platform versions in text
@@ -79,11 +92,17 @@ fn find_java_card(text: &String) -> Vec<String>{
 }
 
 fn find_sha(text: &String) -> Vec<String>{
-    find(Regex::new(r"(SHA|sha)(\s*|-|_)?\d(\d\d)?(/\d\d\d)?").unwrap(), &text)
+    let mut result =
+        // old regex r"(SHA|sha)(\s*|-|_)?\d(\d\d)?(/\d\d\d)?"
+        // did not match the manually created templates but is actually more accurate
+        find(Regex::new(r"(SHA|sha)(\s*|-|_)?\d(\d\d)?").unwrap(), &text);
+
+    return result;
 }
 
 fn find_rsa(text: &String) -> Vec<String>{
-    find(Regex::new(r"(RSA|rsa)(\s*|-|_)?(\d\d\d\d|CRT|SignaturePKCS1|PSS|SSA-PSS)(/\d\d\d\d)?").unwrap(), &text)
+    // old regex r"(RSA|rsa)(\s*|-|_)?(\d\d\d\d|CRT|SignaturePKCS1|PSS|SSA-PSS)(/\d\d\d\d)?"
+    find(Regex::new(r"(RSA|rsa)(\s*|-|_)?(\d\d\d\d|SignaturePKCS1|PSS|SSA-PSS)").unwrap(), &text)
 }
 
 fn find_ecc(text: &String) -> Vec<String>{
@@ -102,7 +121,7 @@ mod tests {
     #[test]
     fn find_eal_ok() {
         let right_eals = vec![
-            "EAL1", "EAL 1", "EAL5+", "EAL 5+", "EAL5 +", "EAL 6 +", " EAL1 ",
+            "EAL1", "EAL 1", "EAL5+", "EAL 5+", "EAL5 +", "EAL 6 +", " EAL1 ", "EAL4+"
         ];
 
         for eal_ok in right_eals {

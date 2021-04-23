@@ -1,14 +1,12 @@
 use regex::Regex;
-use std::collections::HashSet;
 use crate::cert_info::LineOfContents;
-use regex::internal::Input;
 
 const CHAPTER_MAX_CHAR:usize = 100;
 const CHAPTER_MIN_CHAR:usize = 5;
 const TABLE_MAX_LINE:usize = 100;
 const CERT_MAX_PAGE:i32 = 200;
 
-pub fn find_table_of_content(text : &String)->Vec<LineOfContents>{
+pub fn find_table_of_contents(text : &String)->Vec<LineOfContents>{
     let mut res : Vec<LineOfContents> = Vec::new();
 
     let table_section_regex =
@@ -96,7 +94,7 @@ fn find_lines(text : &mut String, line_regex : regex::Regex)->Vec<String>{
     let mut offset = 0;
     while offset < text.len(){
         if line_regex.is_match(text){
-            let mut line = line_regex.find(text).unwrap();
+            let line = line_regex.find(text).unwrap();
             offset = line.end();
             result.push(line.as_str().to_string());
             crop_letters(text, offset);
@@ -193,7 +191,7 @@ C. Excerpts from the Criteria...................................................
 
 D. Annexes.........................................................................................................................27"
     );
-    find_table_of_content(&simplest_case);
+    find_table_of_contents(&simplest_case);
 }
 
 }

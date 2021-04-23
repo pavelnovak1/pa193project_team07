@@ -1,4 +1,3 @@
-use regex::{Captures, Match};
 use regex::Regex;
 
 pub fn replace_whitespace_with_space(text: &str) -> String {
@@ -13,7 +12,7 @@ pub fn replace_whitespace_with_space(text: &str) -> String {
 }
 
 pub fn format_date(orig_date: &str) -> String {
-    let mut re = Regex::new(r"^(?P<d>\d{1,2})[. -](?P<m>\w+)[. -](?P<y>\d{4})").unwrap();
+    let re = Regex::new(r"^(?P<d>\d{1,2})[. -](?P<m>\w+)[. -](?P<y>\d{4})").unwrap();
     let cap = match re.captures(orig_date) {
         Some(inner) => inner,
         None => return orig_date.to_string()
