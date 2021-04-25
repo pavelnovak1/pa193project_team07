@@ -91,9 +91,8 @@ fn find_java_card(text: &str) -> Vec<String> {
     find(Regex::new(r"[Jj]ava\s*[Cc]ard\s*\d(\.\d)*").unwrap(), &text)
 }
 
-fn find_sha(text: &str) -> Vec<String> {
-    find(Regex::new(r"(SHA|sha)(\s*|-|_)?\d(\d\d)?(/\d\d\d)?").unwrap(), &text)
-fn find_sha(text: &String) -> Vec<String>{
+
+fn find_sha(text: &str) -> Vec<String>{
     let mut result =
         // old regex r"(SHA|sha)(\s*|-|_)?\d(\d\d)?(/\d\d\d)?"
         // did not match the manually created templates but is actually more accurate
@@ -102,9 +101,7 @@ fn find_sha(text: &String) -> Vec<String>{
     return result;
 }
 
-fn find_rsa(text: &str) -> Vec<String> {
-    find(Regex::new(r"(RSA|rsa)(\s*|-|_)?(\d\d\d\d|CRT|SignaturePKCS1|PSS|SSA-PSS)(/\d\d\d\d)?").unwrap(), &text)
-fn find_rsa(text: &String) -> Vec<String>{
+fn find_rsa(text: &str) -> Vec<String>{
     // old regex r"(RSA|rsa)(\s*|-|_)?(\d\d\d\d|CRT|SignaturePKCS1|PSS|SSA-PSS)(/\d\d\d\d)?"
     find(Regex::new(r"(RSA|rsa)(\s*|-|_)?(\d\d\d\d|SignaturePKCS1|PSS|SSA-PSS)").unwrap(), &text)
 }
@@ -141,7 +138,7 @@ mod tests {
         let wrong_eals = vec!["EAL", "EAL+", "eal 1"];
 
         for eal_nok in wrong_eals {
-            assert!(
+            assert_eq!(
                 find_eal(&eal_nok.to_string()).len() == 0,
                 "Value {} was not expected to be successfully parsed but it was!",
                 eal_nok
