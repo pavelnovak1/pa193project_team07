@@ -5,11 +5,11 @@ worst=()
 worst_points=()
 sum=0
 i=0
-for filename in test_dataset/*.txt; do
+for filename in ../test_dataset/*.txt; do
 	file=$(echo $filename | rev | cut -c 5- | rev)
 	echo $filename
 	cargo run tmp.json $filename 2> /dev/null
-	res=$(./test_dataset/output_compare.py $file.json tmp.json)
+	res=$(../test_dataset/output_compare.py $file.json tmp.json)
 	echo $res
 	if [[ $res -lt $treshold ]]
 	then
