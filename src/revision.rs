@@ -3,14 +3,6 @@ use regex::Regex;
 use crate::cert_info::Revision;
 use crate::tools::*;
 
-// TODO uklidit kod
-// TODO test_dataset/1086b_pdf.txt
-// test_dataset/1105b_pdf.txt - je spatne expected file
-// TODO test_dataset/NSCIB-CC_0075541-ST.txt
-// test_dataset/NSCIB-CC-0145426-ST_rev_C-final.txt - je spatne expected file
-// TODO test_dataset/[ST-Lite-EAC]_(v1.1)_2018_2000036361_-_Security_Target_Lite_IDeal_Pass_v2.3-n_(SAC_EAC_Polymorphic).txt
-
-
 fn find_and_get_revision_entries(regex_version_entry: &Regex, regex_version_entry_multiline: &Regex, version_to_parse: &str) -> Option<Vec<Revision>> {
     let mut res1 = regex_version_entry.find(version_to_parse)?;
     let mut res2 = regex_version_entry.find_at(version_to_parse, res1.end());
@@ -31,7 +23,6 @@ fn find_and_get_revision_entries(regex_version_entry: &Regex, regex_version_entr
     revisions.push(Revision::new(&cap));
     Some(revisions)
 }
-
 
 
 fn find_version_control(text: &str) -> Option<Vec<Revision>> {
@@ -66,8 +57,6 @@ fn find_revision_history_end(text: &str) -> Option<Vec<Revision>> {
 
     find_and_get_revision_entries(&regex_version_entry, &regex_version_entry_multiline, &version_to_parse)
 }
-
-
 
 
 pub fn find_revision_history_date_version_info(text: &str) -> Option<Vec<Revision>> {
@@ -127,17 +116,6 @@ pub fn find_revision(text: &str) -> Vec<Revision> {
     }
     result.unwrap()
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 #[test]
@@ -215,17 +193,6 @@ Security Target Lite                            4        ",
     assert_eq!(rev[1].date, "2020-10-21");
     assert_eq!(rev[1].description, "final version");
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 #[test]
@@ -530,13 +497,6 @@ Final   ",
 }
 
 
-
-
-
-
-
-
-
 #[test]
 fn find_revision_history_end_test() {
     let mut text = String::from(
@@ -806,18 +766,7 @@ CC Document    ",
     assert_eq!(rev[17].version, "1.8");
     assert_eq!(rev[17].date, "");
     assert_eq!(rev[17].description, "Editorial clean-up");
-
 }
-
-
-
-
-
-
-
-
-
-
 
 
 #[test]

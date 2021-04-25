@@ -3,47 +3,10 @@ use regex::Regex;
 
 use crate::tools::*;
 
-/*
-test_dataset/0782V5b_pdf.txt  --  11  -- tohle ai nepujde vylepsit
-test_dataset/1126b_pdf.txt  --  18  -- nejde, spatne expected ?
-test_dataset/NSCIB-CC-0075446-CRv2.txt  --  18  --  nejde, spatne expected ?
-test_dataset/NSCIB-CC_0075541-ST.txt
-8
-test_dataset/NSCIB-CC-0145426-ST_rev_C-final.txt  --  10  -- nejde, spatne expected ?
-test_dataset/[ST-Lite-EAC]_(v1.1)_2018_2000036361_-_Security_Target_Lite_IDeal_Pass_v2.3-n_(SAC_EAC_Polymorphic).txt
-9
-test_dataset/[ST-Mercury]_Security_Target_Mercury_v3.5.txt
-15
- */
-
 fn find(regex: regex::Regex, text: &str) -> Match {
     let results = regex.find(&text).unwrap();
     results
 }
-/*
-fn replace_whitespace_with_space(text: &str) -> String {
-    let mut re = Regex::new(r"[--]\s*\n\s*").unwrap();
-    let result = String::from(re.replace_all(text, "-"));
-    re = Regex::new(r"\s+").unwrap();
-    let result2 = re.replace_all(&result, " ");
-    let result3 = String::from(result2);
-    result3
-}
-*/
-/*
-fn find_and_get_string_after_match(text: &&str, regex_version_start: Regex) -> Option<String> {
-    let version_start = regex_version_start.find(&text)?;
-    let (_, version_start_text) = text.split_at(version_start.end());
-    Some(version_start_text.to_string())
-}
-
-
-fn find_and_get_string_before_match(regex_version_end: &Regex, version_start_text: &str) -> Option<String> {
-    let version_end = regex_version_end.find(version_start_text)?;
-    let (version_to_parse, _) = version_start_text.split_at(version_end.start());
-    Some(version_to_parse.to_string())
-}
-*/
 
 fn find_title_certification_report(text: &str) -> Option<String> {
     let regex_cap_for_from = Regex::new(r"(?:^|\s)(?:\w|\s)+Certification Report\s+Version \d{4}-\d+\s+(?P<title>(.*|\s)*[^\s])\s+Sponsor(?: and developer)?:").unwrap();
@@ -530,7 +493,6 @@ CC Document  ",
 
     #[test]
     fn find_title_security_target_after_test() {
-
         let mut text = String::from(
             "  NXP Secure Smart Card
   Controller P6022y VB
@@ -703,7 +665,6 @@ Java Card applet configuration providing
 
         assert_eq!(find_title_security_target_after(&text).unwrap(), String::from("jePASS BAC"));
         assert_eq!(find_title(&text), String::from("jePASS BAC"));
-
     }
 
     #[test]
@@ -721,5 +682,4 @@ www.infineon.com                                                                
         assert_eq!(find_title_first_lines(&text).unwrap(), String::from("ePassport configuration of SECORA™ ID S Infineon Applet Collection - eMRTD V1.0"));
         assert_eq!(find_title(&text), String::from("ePassport configuration of SECORA™ ID S Infineon Applet Collection - eMRTD V1.0"));
     }
-
 }

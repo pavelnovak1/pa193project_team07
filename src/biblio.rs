@@ -13,23 +13,19 @@ pub fn find_biblio(text: &str) -> HashMap<String, String> {
 
     if regex_biblio.is_match(&text) {
         bibliography_section = regex_biblio.find_iter(&text)
-            .map(|txt| (String::from(txt.as_str())).to_string()) 
+            .map(|txt| (String::from(txt.as_str())).to_string())
             .collect();
-    }
-
-    else if regex_literature.is_match(&text) {
+    } else if regex_literature.is_match(&text) {
         bibliography_section = regex_literature.find_iter(&text)
-            .map(|txt| (String::from(txt.as_str())).to_string()) 
+            .map(|txt| (String::from(txt.as_str())).to_string())
             .collect();
-    }
-    else if regex_references.is_match(&text) {
+    } else if regex_references.is_match(&text) {
         bibliography_section = regex_references.find_iter(&text)
-            .map(|txt| (String::from(txt.as_str())).to_string()) 
+            .map(|txt| (String::from(txt.as_str())).to_string())
             .collect();
-    }
-    else if regex_referenced_lit.is_match(&text) {
+    } else if regex_referenced_lit.is_match(&text) {
         bibliography_section = regex_referenced_lit.find_iter(&text)
-            .map(|txt| (String::from(txt.as_str())).to_string()) 
+            .map(|txt| (String::from(txt.as_str())).to_string())
             .collect();
     }
     for i in bibliography_section {
@@ -41,15 +37,15 @@ pub fn find_biblio(text: &str) -> HashMap<String, String> {
             if String::from(entry.as_str()).contains("..") || String::from(entry.as_str()).contains('|') {
                 continue;
             }
-            
-            let caps = match regex_entry_cap.captures(entry.as_str()) { 
+
+            let caps = match regex_entry_cap.captures(entry.as_str()) {
                 Some(t) => t,
                 None => continue,
             };
             let name = remove_whitespaces(String::from(caps.get(1).unwrap().as_str()));
             let content = remove_whitespaces(String::from(caps.get(2).unwrap().as_str()));
             if !name.to_string().is_empty() {
-                bibliography_result.insert( name.to_string(), content.to_string());
+                bibliography_result.insert(name.to_string(), content.to_string());
             }
         }
     }

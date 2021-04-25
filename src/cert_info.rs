@@ -53,14 +53,14 @@ impl Versions {
 }
 
 
-pub struct LineOfContents{
-    pub section : String,
-    pub title : String,
-    pub page : i32
+pub struct LineOfContents {
+    pub section: String,
+    pub title: String,
+    pub page: i32,
 }
 
-impl LineOfContents{
-    pub fn new()->LineOfContents{
+impl LineOfContents {
+    pub fn new() -> LineOfContents {
         LineOfContents {
             section: String::new(),
             title: String::new(),
@@ -69,7 +69,7 @@ impl LineOfContents{
     }
 }
 
-impl Serialize for LineOfContents{
+impl Serialize for LineOfContents {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
         where
             S: Serializer,
@@ -91,7 +91,6 @@ pub struct Revision {
 }
 
 impl Revision {
-    //TODO prejmenovat
     pub fn new(capture: &Captures) -> Revision {
         let version = match capture.name("rev") {
             Some(_) => capture["rev"].to_string(),
@@ -108,9 +107,3 @@ impl Revision {
         Revision { version, date, description }
     }
 }
-/*
-impl Serialize for Revision {
-    fn serialize<Serializer>(&self, serializer: Serializer) -> Result<Serializer::Ok, Serializer::Error> {
-        let mut state = serializer.serialize_struct("")
-    }
-}*/

@@ -141,7 +141,7 @@ mod tests {
     }
 
     #[test]
-    fn find_java_card_ok(){
+    fn find_java_card_ok() {
         let right_java_cards = vec!["Java Card 3.0.4", "Java Card 3", "Java Card 3.0.5"];
 
 
@@ -153,14 +153,13 @@ mod tests {
     }
 
     #[test]
-    fn find_sha_ok(){
+    fn find_sha_ok() {
         let right_shas = vec!["SHA-256", "SHA-1", "SHA224", "SHA1",
                               "SHA-3/224", "SHA-3/256", "SHA-3/384", "SHA-3/512", "SHA-3",
                               "SHA_224", "SHA_256", "SHA_384", "SHA_512"];
 
 
         for sha_ok in right_shas {
-
             assert!(find_sha(&sha_ok.to_string()).contains(&sha_ok.to_string().trim().to_string()),
                     "Value {} was expected to be parsed but parsing failed!",
                     sha_ok);
@@ -168,27 +167,24 @@ mod tests {
     }
 
     #[test]
-    fn find_rsa_ok(){
+    fn find_rsa_ok() {
         let right_rsas = vec!["RSA2048/4096", "RSA2048", "RSA2048", "RSA 2048", "RSA 4096",
                               "RSA 1024", "RSA_1024", "RSA-CRT", "RSASignaturePKCS1", "RSASSA-PSS"];
 
 
         for rsa_ok in right_rsas {
-
             assert!(find_rsa(&rsa_ok.to_string()).contains(&rsa_ok.to_string().trim().to_string()),
                     "Value {} was expected to be parsed but parsing failed!",
                     rsa_ok);
         }
-
     }
 
     #[test]
-    fn find_ecc_ok(){
+    fn find_ecc_ok() {
         let right_eccs = vec!["ECC 224", "ECC 256"];
 
 
         for ecc_ok in right_eccs {
-
             assert!(find_ecc(&ecc_ok.to_string()).contains(&ecc_ok.to_string().trim().to_string()),
                     "Value {} was expected to be parsed but parsing failed!",
                     ecc_ok);
@@ -196,13 +192,12 @@ mod tests {
     }
 
     #[test]
-    fn find_des_ok(){
+    fn find_des_ok() {
         let right_deses = vec!["Triple-DES", "TDES", "Triple DES", "single-des", "3DES",
-                              "TripleDES", "DES3", "triple-DES"];
+                               "TripleDES", "DES3", "triple-DES"];
 
 
         for des_ok in right_deses {
-
             assert!(find_des(&des_ok.to_string()).contains(&des_ok.to_string().trim().to_string()),
                     "Value {} was expected to be parsed but parsing failed!",
                     des_ok);
@@ -219,6 +214,4 @@ mod tests {
             assert!(result.eal.contains(&eal.to_string()), "{} is missing in the result!", eal);
         }
     }
-
-
 }
