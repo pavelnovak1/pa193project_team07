@@ -7,9 +7,23 @@ pub fn replace_whitespace_with_space(text: &str) -> String {
     let result2 = re.replace_all(&result, " ");
     re = Regex::new(r"\s+$").unwrap();
     let result3 = re.replace_all(&result2, "");
-    let result4 = String::from(result3);
-    result4
+    String::from(result3)
 }
+
+
+pub(crate) fn find_and_get_string_after_match(text: &&str, regex_version_start: Regex) -> Option<String> {
+    let version_start = regex_version_start.find(&text)?;
+    let (_, version_start_text) = text.split_at(version_start.end());
+    Some(version_start_text.to_string())
+}
+
+
+pub(crate) fn find_and_get_string_before_match(regex_version_end: &Regex, version_start_text: &str) -> Option<String> {
+    let version_end = regex_version_end.find(version_start_text)?;
+    let (version_to_parse, _) = version_start_text.split_at(version_end.start());
+    Some(version_to_parse.to_string())
+}
+
 
 pub fn format_date(orig_date: &str) -> String {
     let re = Regex::new(r"^(?P<d>\d{1,2})[. -](?P<m>\w+)[. -](?P<y>\d{4})").unwrap();
@@ -34,9 +48,9 @@ pub fn format_date(orig_date: &str) -> String {
     };
 
     let mut new_date = cap["y"].to_string();
-    new_date.push_str("-");
+    new_date.push('-');
     new_date.push_str(month);
-    new_date.push_str("-");
+    new_date.push('-');
     new_date.push_str(&cap["d"]);
     new_date
 }

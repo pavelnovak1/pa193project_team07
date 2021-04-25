@@ -1,3 +1,9 @@
+use std::env;
+
+use crate::cert_info::Certificate;
+use crate::extract_info::extract_info;
+use crate::write_info::{write, write_parts_only};
+
 mod extract_info;
 mod write_info;
 mod cert_info;
@@ -7,40 +13,91 @@ mod biblio;
 mod revision;
 mod tools;
 mod table_of_contents;
+mod config;
 
-use std::env;
-use crate::extract_info::extract_info;
-use crate::write_info::write;
-use crate::cert_info::Certificate;
-
-fn main() {
-
-    let args: Vec<String> = env::args().collect();
-    // println!("Arguments are");
-    // println!("{:?}", args);
-
-    let config = Config::new(&args);
-    // println!("{}", config.input_filename);
-
-    //(pretty print) queries zatim nebudou
-
-    let certificate = extract_info(&config.input_filename);
-    write(&certificate, &config.output_filename);
+fn print_help() {
+    println!("Usage: cargo run -- [OPTION | FILE] ...\n");
+    println!("OPTION:\n\t--pretty-print\tExtracts all information and pretty prints them");
+    println!("\t--title \t\tExtracts title and pretty prints");
+    println!("\t--content\t\tExtracts table of contents and pretty prints");
+    println!("\t--biblio\t\tExtracts bibliography and pretty prints");
+    println!("\t--versions\t\tExtracts versions and pretty prints");
+    println!("\t--revisions\t\tExtracts revisions and pretty prints");
+    println!("\nFILE:\t\tName of the file to be parsed. If no OPTION is given, the output is saved in FILE.json file. \n");
 }
-struct Config {
-    queries : Vec<String>,
-    input_filename : String,
-    output_filename : String,
-}
-impl Config {
-    fn new(args: &[String]) -> Config{
-        let input_filename = args.last().unwrap().clone();
-        let n = args.len();
-        let queries = args[0..(n-2)].to_vec(); //toto se mozna v Rustu nema delat
-        let output_filename = args[n-2].clone();
 
-        Config { queries, input_filename, output_filename }
+fn process_argument(arg: &str, conf: &mut config::Config) -> bool {
+    match arg.chars().nth(0).unwrap() {
+        '-' => {
+            match arg {
+                "--pretty-print" => {
+                    conf.pretty = true;
+                    conf.pretty_title = true;
+                    conf.pretty_content = true;
+                    conf.pretty_biblio = true;
+                    conf.pretty_versions = true;
+                    conf.pretty_revisions = true;
+                }
+                "--title" => {
+                    conf.pretty = true;
+                    conf.pretty_title = true;
+                }
+                "--content" => {
+                    conf.pretty = true;
+                    conf.pretty_content = true;
+                }
+                "--biblio" => {
+                    conf.pretty = true;
+                    conf.pretty_biblio = true;
+                }
+                "--versions" => {
+                    conf.pretty = true;
+                    conf.pretty_versions = true;
+                }
+                "--revisions" => {
+                    conf.pretty = true;
+                    conf.pretty_revisions = true;
+                }
+                &_ => {
+                    print_help();
+                    return false;
+                }
+            }
+        }
+        _ => { conf.input_files.push(arg.to_string()); }
+    }
+    true
+}
+
+fn extract_and_write_info(conf: &config::Config) {
+    for filename in conf.input_files.iter() {
+        let certificate = extract_info(&filename, &conf);
+        if conf.pretty {
+            write_parts_only(&certificate, filename, &conf);
+        } else {
+            let mut output_filename = filename.to_string();
+            output_filename.push_str(".json");
+            write(&certificate, &output_filename)
+        }
     }
 }
+
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    let mut config = config::Config::new(&args);
+    let mut first_arg = true;
+    for arg in args {
+        if first_arg {
+            first_arg = false;
+        } else {
+            if !process_argument(&arg, &mut config) {
+                return;
+            }
+        }
+    }
+    extract_and_write_info(&config);
+}
+
 
 

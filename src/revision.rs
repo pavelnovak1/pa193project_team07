@@ -1,14 +1,7 @@
 use regex::Regex;
 
 use crate::cert_info::Revision;
-
-// TODO uklidit kod
-// TODO test_dataset/1086b_pdf.txt
-// test_dataset/1105b_pdf.txt - je spatne expected file
-// TODO test_dataset/NSCIB-CC_0075541-ST.txt
-// test_dataset/NSCIB-CC-0145426-ST_rev_C-final.txt - je spatne expected file
-// TODO test_dataset/[ST-Lite-EAC]_(v1.1)_2018_2000036361_-_Security_Target_Lite_IDeal_Pass_v2.3-n_(SAC_EAC_Polymorphic).txt
-
+use crate::tools::*;
 
 fn find_and_get_revision_entries(regex_version_entry: &Regex, regex_version_entry_multiline: &Regex, version_to_parse: &str) -> Option<Vec<Revision>> {
     let mut res1 = regex_version_entry.find(version_to_parse)?;
@@ -32,19 +25,6 @@ fn find_and_get_revision_entries(regex_version_entry: &Regex, regex_version_entr
 }
 
 
-fn find_and_get_string_after_match(text: &&str, regex_version_start: Regex) -> Option<String> {
-    let mut version_start = regex_version_start.find(&text)?;
-    let (_, version_start_text) = text.split_at(version_start.end());
-    Some(version_start_text.to_string())
-}
-
-
-fn find_and_get_string_before_match(regex_version_end: &Regex, version_start_text: &str) -> Option<String> {
-    let version_end = regex_version_end.find(version_start_text)?;
-    let (version_to_parse, _) = version_start_text.split_at(version_end.start());
-    Some(version_to_parse.to_string())
-}
-
 fn find_version_control(text: &str) -> Option<Vec<Revision>> {
     let regex_version_start =
         Regex::new(r"Version Control\s+Version\s+Date\s+Author\s+Changes to Previous Version\s+")
@@ -58,8 +38,7 @@ fn find_version_control(text: &str) -> Option<Vec<Revision>> {
     let version_start_text = find_and_get_string_after_match(&text, regex_version_start)?;
     let version_to_parse = find_and_get_string_before_match(&regex_version_end, &version_start_text)?;
 
-    let revisions = find_and_get_revision_entries(&regex_version_entry, &regex_version_entry_multiline, &version_to_parse);
-    revisions
+    find_and_get_revision_entries(&regex_version_entry, &regex_version_entry_multiline, &version_to_parse)
 }
 
 
@@ -76,11 +55,8 @@ fn find_revision_history_end(text: &str) -> Option<Vec<Revision>> {
     let version_start_text = find_and_get_string_after_match(&text, regex_version_start)?;
     let version_to_parse = find_and_get_string_before_match(&regex_version_end, &version_start_text)?;
 
-    let revisions = find_and_get_revision_entries(&regex_version_entry, &regex_version_entry_multiline, &version_to_parse);
-    revisions
+    find_and_get_revision_entries(&regex_version_entry, &regex_version_entry_multiline, &version_to_parse)
 }
-
-
 
 
 pub fn find_revision_history_date_version_info(text: &str) -> Option<Vec<Revision>> {
@@ -96,8 +72,7 @@ pub fn find_revision_history_date_version_info(text: &str) -> Option<Vec<Revisio
     let version_start_text = find_and_get_string_after_match(&text, regex_version_start)?;
     let version_to_parse = find_and_get_string_before_match(&regex_version_end, &version_start_text)?;
 
-    let revisions = find_and_get_revision_entries(&regex_version_entry, &regex_version_entry_multiline, &version_to_parse);
-    revisions
+    find_and_get_revision_entries(&regex_version_entry, &regex_version_entry_multiline, &version_to_parse)
 }
 
 pub fn find_revision_history_version_date_info(text: &str) -> Option<Vec<Revision>> {
@@ -122,8 +97,7 @@ pub fn find_revision_history_version_date_info(text: &str) -> Option<Vec<Revisio
 
     let version_to_parse = find_and_get_string_before_match(&regex_version_end, version_start_text)?;
 
-    let revisions = find_and_get_revision_entries(&regex_version_entry, &regex_version_entry_multiline, &version_to_parse);
-    revisions
+    find_and_get_revision_entries(&regex_version_entry, &regex_version_entry_multiline, &version_to_parse)
 }
 
 pub fn find_revision(text: &str) -> Vec<Revision> {
@@ -142,17 +116,6 @@ pub fn find_revision(text: &str) -> Vec<Revision> {
     }
     result.unwrap()
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 #[test]
@@ -230,17 +193,6 @@ Security Target Lite                            4        ",
     assert_eq!(rev[1].date, "2020-10-21");
     assert_eq!(rev[1].description, "final version");
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 #[test]
@@ -545,13 +497,6 @@ Final   ",
 }
 
 
-
-
-
-
-
-
-
 #[test]
 fn find_revision_history_end_test() {
     let mut text = String::from(
@@ -821,18 +766,7 @@ CC Document    ",
     assert_eq!(rev[17].version, "1.8");
     assert_eq!(rev[17].date, "");
     assert_eq!(rev[17].description, "Editorial clean-up");
-
 }
-
-
-
-
-
-
-
-
-
-
 
 
 #[test]
