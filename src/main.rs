@@ -17,18 +17,27 @@ mod config;
 
 fn print_help() {
     println!("Usage: cargo run -- [OPTION | FILE] ...\n");
-    println!("OPTION:\n\t--title\tExtracts title and pretty prints");
-    println!("\t--content\tExtracts table of contents and pretty prints");
-    println!("\t--biblio\tExtracts bibliography and pretty prints");
-    println!("\t--versions\tExtracts versions and pretty prints");
-    println!("\t--revisions\tExtracts revisions and pretty prints");
-    println!("\nFILE:\tName of the file to be parsed. If no OPTION is given, the output is saved in FILE.json file. \n");
+    println!("OPTION:\n\t--pretty-print\tExtracts all information and pretty prints them");
+    println!("\t--title \t\tExtracts title and pretty prints");
+    println!("\t--content\t\tExtracts table of contents and pretty prints");
+    println!("\t--biblio\t\tExtracts bibliography and pretty prints");
+    println!("\t--versions\t\tExtracts versions and pretty prints");
+    println!("\t--revisions\t\tExtracts revisions and pretty prints");
+    println!("\nFILE:\t\tName of the file to be parsed. If no OPTION is given, the output is saved in FILE.json file. \n");
 }
 
 fn process_argument(arg: &str, conf: &mut config::Config) -> bool {
     match arg.chars().nth(0).unwrap() {
         '-' => {
             match arg {
+                "--pretty-print" => {
+                    conf.pretty = true;
+                    conf.pretty_title = true;
+                    conf.pretty_content = true;
+                    conf.pretty_biblio = true;
+                    conf.pretty_versions = true;
+                    conf.pretty_revisions = true;
+                }
                 "--title" => {
                     conf.pretty = true;
                     conf.pretty_title = true;
