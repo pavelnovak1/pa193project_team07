@@ -771,7 +771,7 @@ CC Document    ",
 
 #[test]
 fn find_version_control_test() {
-    let mut text = String::from(
+    let text = String::from(
         "NXP eDoc Suite v3.5 on JCOP4 P71 / PP0056v2 based Security Target Lite
 
 
@@ -796,7 +796,7 @@ Version     Date           Author                Changes to Previous Version
     );
 
 //    let mut rev = find_version_control(&text).unwrap();
-    let mut rev = find_revision(&text);
+    let rev = find_revision(&text);
     assert_eq!(rev.len(), 3);
     assert_eq!(rev[0].version, "1.0");
     assert_eq!(rev[1].version, "1.1");

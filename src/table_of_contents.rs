@@ -1,11 +1,9 @@
 use regex::Regex;
-
 use crate::cert_info::LineOfContents;
-use regex::internal::Input;
+
 
 const CHAPTER_MAX_CHAR: usize = 100;
 const CHAPTER_MIN_CHAR: usize = 5;
-const TABLE_MAX_LINE: usize = 100;
 const CERT_MAX_PAGE: i32 = 200;
 
 pub fn find_table_of_content(text: &String) -> Vec<LineOfContents> {
@@ -25,7 +23,7 @@ pub fn find_table_of_content(text: &String) -> Vec<LineOfContents> {
             .unwrap();
 
     let mut table_section = find_section(text, table_section_regex);
-    let mut section = Vec::new();
+    let mut section;
 
     // println!("Section head: {}", table_section);
     // println!("######### STOP ###########");

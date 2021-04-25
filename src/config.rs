@@ -9,7 +9,7 @@ pub struct Config {
 }
 
 impl Config {
-    pub(crate) fn new(args: &[String]) -> Config {
+    pub(crate) fn new(_args: &[String]) -> Config {
         let input_files = Vec::new();
 
         Config { input_files, pretty: false, pretty_title: false, pretty_versions: false, pretty_revisions: false, pretty_biblio: false, pretty_content: false }

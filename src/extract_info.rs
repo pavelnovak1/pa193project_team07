@@ -1,13 +1,11 @@
-use std::fs::File;
-use std::io::{self, BufRead};
-use std::path::Path;
-
-use crate::biblio::{find_biblio, remove_page_ends};
+use crate::biblio::find_biblio;
 use crate::cert_info::*;
 use crate::revision::find_revision;
 use crate::title::find_title;
 use crate::table_of_contents::find_table_of_content;
 use crate::versions::find_versions;
+use crate::config;
+use std::process;
 
 pub(crate) fn extract_info(filename: &str, conf: &config::Config) -> Certificate {
     let cert = std::fs::read_to_string(filename);

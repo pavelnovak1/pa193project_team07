@@ -93,7 +93,7 @@ fn find_java_card(text: &str) -> Vec<String> {
 
 
 fn find_sha(text: &str) -> Vec<String>{
-    let mut result =
+    let result =
         // old regex r"(SHA|sha)(\s*|-|_)?\d(\d\d)?(/\d\d\d)?"
         // did not match the manually created templates but is actually more accurate
         find(Regex::new(r"(SHA|sha)(\s*|-|_)?\d(\d\d)?").unwrap(), &text);
@@ -139,7 +139,7 @@ mod tests {
 
         for eal_nok in wrong_eals {
             assert_eq!(
-                find_eal(&eal_nok.to_string()).len() == 0,
+                find_eal(&eal_nok.to_string()).len(),  0,
                 "Value {} was not expected to be successfully parsed but it was!",
                 eal_nok
             );
