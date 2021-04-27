@@ -170,8 +170,9 @@ mod tests {
 
     #[test]
     fn find_sha_ok() {
+        // with old version also "SHA-3/224", "SHA-3/256", "SHA-3/384", "SHA-3/512",
         let right_shas = vec!["SHA-256", "SHA-1", "SHA224", "SHA1",
-                              "SHA-3/224", "SHA-3/256", "SHA-3/384", "SHA-3/512", "SHA-3",
+                               "SHA-3",
                               "SHA_224", "SHA_256", "SHA_384", "SHA_512"];
 
 
@@ -184,8 +185,9 @@ mod tests {
 
     #[test]
     fn find_rsa_ok() {
-        let right_rsas = vec!["RSA2048/4096", "RSA2048", "RSA2048", "RSA 2048", "RSA 4096",
-                              "RSA 1024", "RSA_1024", "RSA-CRT", "RSASignaturePKCS1", "RSASSA-PSS"];
+        // with old version also "RSA2048/4096","RSA-CRT",
+        let right_rsas = vec![ "RSA2048", "RSA2048", "RSA 2048", "RSA 4096",
+                              "RSA 1024", "RSA_1024",  "RSASignaturePKCS1", "RSASSA-PSS"];
 
 
         for rsa_ok in right_rsas {
