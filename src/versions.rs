@@ -2,6 +2,7 @@ use std::collections::HashSet;
 use regex::Regex;
 use crate::cert_info::Versions;
 use crate::tools::replace_whitespace_with_space;
+
 /// Main function used to extract version information from given text.
 /// This function return a `Version` struct containing all extracted information
 ///
