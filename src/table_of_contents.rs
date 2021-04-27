@@ -246,5 +246,21 @@ Keywords            CC, Security Target Lite, P60D024/016/012yVB(Y/Z/A)/yVF
         assert_eq!(result.title, expected_title);
         assert_eq!(result.page, expected_page);
     }
+    #[test]
+    fn erase_dot_test(){
+        let no_dots_line = String::from("A. The Very First Section             21");
+        let no_dots_line_regex =
+            Regex::new(r"(?P<section>\d{1,2}(\.\d)*|[A-Z]\.|\d{1,2}.)\s*(?P<title>[A-Z]((\w|[“”\-\(\)\-:,/]|\w\.)+\s?)+)(\s|\.)+(?P<page>\d+)")
+                .unwrap();
+        assert!(no_dots_line_regex.is_match(&no_dots_line));
+
+        let expected_section = String::from("A");
+        let expected_title = String::from("The Very First Section");
+        let expected_page = 21;
+        let result = extract_line_info(&no_dots_line, no_dots_line_regex , 0);
+        assert_eq!(result.section, expected_section);
+        assert_eq!(result.title, expected_title);
+        assert_eq!(result.page, expected_page);
+    }
 
 }
