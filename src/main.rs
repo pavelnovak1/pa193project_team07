@@ -90,11 +90,9 @@ fn main() {
     for arg in args {
         if first_arg {
             first_arg = false;
-        } else {
-            if !process_argument(&arg, &mut config) {
+        } else if !process_argument(&arg, &mut config) {
                 return;
             }
-        }
     }
     extract_and_write_info(&config);
 }

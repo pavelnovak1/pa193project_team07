@@ -62,7 +62,7 @@ fn find_eal(text: &str) -> Vec<String> {
         &text,
     );
     for s in result.clone() {
-        if s.starts_with("("){
+        if s.starts_with('('){
             // from here https://stackoverflow.com/questions/26243025/remove-an-element-from-a-vector
             let index = result.iter().position(|x| x.starts_with('(')).unwrap();
             let new_s = s.strip_prefix("(").unwrap().to_string();
