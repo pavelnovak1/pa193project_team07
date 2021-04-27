@@ -36,5 +36,5 @@ pub fn write(cert: &Certificate, filename: &str) {
         let r = Regex::new(pattern).unwrap();
         res = String::from(r.replace_all(&res, ""));
     }
-    fs::write(filename, res);
+    fs::write(filename, res).unwrap();
 }

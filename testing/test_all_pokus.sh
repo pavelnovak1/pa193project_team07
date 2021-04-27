@@ -19,6 +19,7 @@ for filename in ../test_dataset/*.txt; do
 	sum=$((sum+res))
 	results+=( $res )
 	i=$((i+1))
+	rm -f ../test_dataset/$file.txt.json
 done
 echo "=================================="
 echo "Total files processed: $i"
