@@ -121,23 +121,22 @@ fn extract_line_info(line: &String, regex: regex::Regex, last_page: i32) -> Line
     let mut result = LineOfContents::new();
     let caps = regex.captures(line).unwrap();
 
-    let mut section_number = caps.name("section").unwrap().as_str().to_string();
+    let mut section_number : String = caps.name("section").unwrap().as_str().to_string();
     if section_number.chars().last().unwrap().eq(&'.') {
         section_number.pop();
     }
 
-    let mut section_title = caps.name("title").unwrap().as_str().to_string();
+    let mut section_title : String = caps.name("title").unwrap().as_str().to_string();
     while section_title.chars().last().unwrap().eq(&' ') {
         section_title.pop();
     }
     //this is not safe, should be OK/Err options
-    let page = caps.name("page").unwrap().as_str().parse::<i32>().unwrap();
-
+    let page : i32 = caps.name("page").unwrap().as_str().parse::<i32>().unwrap();
 
     if section_title.len() > CHAPTER_MAX_CHAR || section_title.len() < CHAPTER_MIN_CHAR {
         return result;
     }
-    // last_page > page ||
+
     if last_page > page || page > CERT_MAX_PAGE {
         return result;
     }
@@ -220,7 +219,7 @@ Keywords            CC, Security Target Lite, P60D024/016/012yVB(Y/Z/A)/yVF
     fn simple_line_test(){
         let simple_line = String::from("1.1 The Very First Section .............. 21");
         let simple_line_regex =
-            Regex::new(r"(\d{1,2}(\.\d)*|[A-Z]\.|\d{1,2}.)\s*([A-Z](\w|\s|[“”\-\(\)\-:,/]|\w\.)*)(\s|\.)+(\d+)")
+            Regex::new(r"(?P<section>\d{1,2}(\.\d)*|[A-Z]\.|\d{1,2}.)\s*(?P<title>[A-Z](\w|\s|[“”\-\(\)\-:,/]|\w\.)*)(\s|\.)+(?P<page>\d+)")
                 .unwrap();
         let expected_section = String::from("1.1");
         let expected_title = String::from("The Very First Section");
