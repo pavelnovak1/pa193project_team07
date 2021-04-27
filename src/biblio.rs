@@ -17,11 +17,11 @@ pub fn find_biblio(text: &str) -> HashMap<String, String> {
             .collect();
     } else if regex_literature.is_match(&text) {
         bibliography_section = regex_literature.find_iter(&text)
-            .map(|txt| (String::from(txt.as_str())).to_string())
+            .map(|txt| (String::from(txt.as_str())))
             .collect();
     } else if regex_references.is_match(&text) {
         bibliography_section = regex_references.find_iter(&text)
-            .map(|txt| (String::from(txt.as_str())).to_string())
+            .map(|txt| (String::from(txt.as_str())))
             .collect();
     } else if regex_referenced_lit.is_match(&text) {
         bibliography_section = regex_referenced_lit.find_iter(&text)

@@ -27,7 +27,7 @@ fn print_help() {
 }
 
 fn process_argument(arg: &str, conf: &mut config::Config) -> bool {
-    match arg.chars().nth(0).unwrap() {
+    match arg.chars().next().unwrap() {
         '-' => {
             match arg {
                 "--pretty-print" => {
