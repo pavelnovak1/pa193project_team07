@@ -4,8 +4,7 @@ use regex::Regex;
 use crate::tools::*;
 
 fn find(regex: regex::Regex, text: &str) -> Match {
-    let results = regex.find(&text).unwrap();
-    results
+    regex.find(&text).unwrap()
 }
 
 fn find_title_certification_report(text: &str) -> Option<String> {

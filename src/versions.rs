@@ -72,7 +72,7 @@ fn find_eal(text: &str) -> Vec<String> {
     }
     result.sort();
     result.dedup();
-    return result
+    result
 }
 
 /// Wrapper - Return all occurences of global platform versions in text
