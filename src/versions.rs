@@ -64,7 +64,7 @@ fn find_eal(text: &str) -> Vec<String> {
     for s in result.clone() {
         if s.starts_with("("){
             // from here https://stackoverflow.com/questions/26243025/remove-an-element-from-a-vector
-            let index = result.iter().position(|x| x.starts_with("(")).unwrap();
+            let index = result.iter().position(|x| x.starts_with('(')).unwrap();
             let new_s = s.strip_prefix("(").unwrap().to_string();
             result.remove(index);
             result.push(new_s);
@@ -188,7 +188,6 @@ mod tests {
         // with old version also "RSA2048/4096","RSA-CRT",
         let right_rsas = vec![ "RSA2048", "RSA2048", "RSA 2048", "RSA 4096",
                               "RSA 1024", "RSA_1024",  "RSASignaturePKCS1", "RSASSA-PSS"];
-
 
         for rsa_ok in right_rsas {
             assert!(find_rsa(&rsa_ok.to_string()).contains(&rsa_ok.to_string().trim().to_string()),

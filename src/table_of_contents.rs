@@ -32,7 +32,7 @@ pub fn find_table_of_content(text: &String) -> Vec<LineOfContents> {
         section = find_lines(&mut table_section, no_dots_line_regex.clone());
         parse_lines(&mut res, simple_line_regex, &mut section);
     }
-    return res;
+    res
 }
 
 fn parse_lines(res: &mut Vec<LineOfContents>, regex: Regex, section: &mut Vec<String>) {
@@ -43,7 +43,7 @@ fn parse_lines(res: &mut Vec<LineOfContents>, regex: Regex, section: &mut Vec<St
         if !line_info.title.is_empty() {
             res.push(line_info);
         }
-        if res.len() > 0 {
+        if !res.is_empty() {
             last_page = res[res.len() - 1].page;
         }
     }
