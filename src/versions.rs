@@ -93,12 +93,9 @@ fn find_java_card(text: &str) -> Vec<String> {
 
 
 fn find_sha(text: &str) -> Vec<String>{
-    let result =
         // old regex r"(SHA|sha)(\s*|-|_)?\d(\d\d)?(/\d\d\d)?"
         // did not match the manually created templates but is actually more accurate
-        find(Regex::new(r"(SHA|sha)(\s*|-|_)?\d(\d\d)?").unwrap(), &text);
-
-    return result;
+    find(Regex::new(r"(SHA|sha)(\s*|-|_)?\d(\d\d)?").unwrap(), &text)
 }
 
 fn find_rsa(text: &str) -> Vec<String>{
