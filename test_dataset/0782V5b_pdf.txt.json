@@ -1,0 +1,230 @@
+{
+  "title": "M7892 B11",
+  "versions": {
+    "eal": [
+      "EAL 6",
+      "EAL4+",
+      "EAL6",
+      "EAL6+"
+    ],
+            "sha": [
+      "SHA-2",
+      "SHA1",
+      "SHA 256",
+      "SHA 512",
+      "SHA2",
+      "SHA-256",
+      "SHA-512",
+      "SHA256"
+    ],
+    "rsa": [
+      "RSA2048",
+      "RSA-2048",
+      "RSA4096"
+    ],
+        "des": [
+      "3 DES",
+      "Triple DES",
+      "Triple-DES",
+      "TDES",
+      "triple-DES"
+    ]
+  },
+  "bibliography": {
+    "[17]": "2013-09-05 Digital Signature Standard (DSS), U.S. Department of Commerce, National 186-4 Institute of Standards and Technology (NIST) IETF: RFC 5639, Elliptic Curve Cryptography (ECC) Brainpool Standard",
+    "[18033]": "(for AES) National Institute of Standards and Technology, “Security Requirements",
+    "[25]": "X.9.62 2005-11-16 Digital Signature Algorithm (ECDSA), American National Standards Institute IEEE Standard Specification for Public Key Cryptography, IEEE Standards Board. The standard covers specification for public key cryptography 2000-01-30",
+    "[30]": "2005",
+    "[10]": "v2.02.012 2017-05-02 Controller, User Interface Chipcard and Security iCs, SLx70 Family, Secure Hash Algorithm SHA-2,",
+    "[11]": "2020-08-19 (SHA 256/224, SHA 512/384) (optional)",
+    "[36]": "2018-11 14888-3 Discrete logarithm based mechanisms Information technology — Security techniques — Key management — ISO/IEC",
+    "[34]": "2011-03-01 97971: 2011 Codes (MACs) Part 1 Mechanisms using block cipher SLE70 Asymmetric Crypto Library for Crypto@2304T, RSA / ECC / Toolbox,",
+    "[2]": "2017-04 Introduction and General Model; Version 3.1 Revision 5 April 2017, Rev 5 CCMB-2017-04-001 Common Criteria for Information Technology Security Evaluation Part 2: V3.1",
+    "[1]": "1.0 2007-06-15 Security IC Platform Protection Profile PP0035 Common Criteria for Information Technology Security Evaluation Part 1: V3.1",
+    "[5]": "3.0 2013-05-15 Functionality classes for random number generators”, Version 2.0, 2011-09-18, Wolfgang Killmann, T-Systems GEI GmbH, Werner Schindler, Bundesamt für Sicherheit in der Informationstechnik M7892 SOLID FLASH™ Controller for Security Applications, 16-bit Security",
+    "[38]": "2015-08 11770-3 Part 3: Mechanisms using asymmetric techniques",
+    "[23]": "PUB 197 2001-11-26 Technology, Information Technology Laboratory (ITL), Advanced Encryption Standard (AES), FIPS PUB 197 American National Standard for Financial Services ANS X9.62-2005, Public Key Cryptography for the Financial Services Industry, The Elliptic Curve",
+    "[31]": "PUB 140-2 2002-12-03 for Cryptographic Modules”, Federal Information Processing Standards Publication (FIPS) 140-2 , 2002-12-03 V3.1 Common Methodology for Information Technology Security Evaluation,",
+    "[14]": "2020-07-17 M7892 Security Guidelines",
+    "[3]": "2017-04 Security Functional Requirements; Version 3.1 Revision 5 April 2017, Rev 5 CCMB-2017-04-002 Common Criteria for Information Technology Security Evaluation Part 3: V3.1",
+    "[9]": "v1.02.013 2020-10-05 User Interface SCL78 Symmetric Crypto Library for SCP v3, DES / AES, 16-bit Security",
+    "[15]": "Rev.7.1 2019-12-18 M7892 Errata Sheet Application of Attack Potential to Smartcard, mandatory technical",
+    "[18]": "RFC 5639 2010-03 Curves and Curve Generation, March 2010, http://www.ietf.org/rfc/rfc5639.txt Information Technology Laboratory, National Institute of Standards and FIPS PUB",
+    "[20]": "X.9.63 2011-12 Transport Using Elliptic Curve Cryptography, American National Standards Institute PKCS, RFC",
+    "[22]": "2017-11 Rev. 2 Administration, U.S. Department of Commerce, NIST Special Publication",
+    "[16]": "2.9 2013-01 document, CCDB-2013-05-002, http://www.commoncriteriaportal.org Federal Information Processing Standards Publication, FIPS PUB 186-4, FIPS PUB",
+    "[29]": "2004 10118 Hash-functions – Part 3: Dedicated hash functions (for AES) ISO/IEC ISO/IEC 18033-3:2004, Information technology – Security techniques –",
+    "[13]": "2.0 2019-10-28 Reference Manual",
+    "[4]": "2017-04 Security Assurance Requirements; Version 3.1 Revision 5 April 2017, Rev 5 CCMB-2017-04-003 Functionality classes and evaluation methodology for physical random number generators AIS31, Version 3.0, 2013-05-15, Bundesamt für Sicherheit in der Informationstechnik and belonging “A proposal for:",
+    "[7]": "2015-04-01 SLx 70 Family Production and Personalization User's Manual",
+    "[28]": "SP 800-38A 2001-12 Administration, US Department of Commerce, NIST Special Publication SP 800-38A (for AES and DES) ISO/IEC ISO/IEC 10118-3:2004, Information technology – Security techniques –",
+    "[6]": "Rev. 3.0 2019-05-24 Controller Family, 90nm Technology, Hardware Reference Manual",
+    "[21]": "2016-11 PKCS #1: RSA Cryptography Specifications Version 2.2 8017, v2.2 SP 800-67 National Institute of Standards and Technology (NIST), Technology",
+    "[35]": "V2.07.003 2019-05-27 User Interface, Infineon Technologies, 2017-05-15, SLE70-CryptoLibrary-UserInterface_v2.07.003.pdf IT Security techniques — Digital signatures with appendix — Part 3: ISO / IEC",
+    "[39]": "4.0 2020-09-25 Confidential Secure Target for M7892 B11",
+    "[12]": "2010-03-23 SLE70 Crypto@2304T User Manual AMM Advanced Mode for NRG SAM, Addendum to M7892 Hardware",
+    "[8]": "v9.14 2019-12-03 16-bit Controller Family, SLE 70, Programmer's Reference Manual SLE70 Asymmetric Crypto Library Crypto@2304T, RSA / EC / Toolbox,",
+    "[33]": "2012-09 Rev 4 Evaluation methodology, CCMB-2012-09-004 ISO/IEC Information technology – Security techniques - Message Authentication",
+    "[27]": "IEEE 1363 including mathematical primitives for secret value deviation, public key (approved) encryption and digital signatures and cryptographic schemes based on those primitives. National Institute of Standards and Technology(NIST), Technology",
+    "[19]": "2015-08 Technology, Gaithersburg, MD 20899-8900, Federal Information 180-4 Processing Standards Publication, Secure Hash Standard (SHS) American National Standard for Financial Services X9.63-2011, Public Key Cryptography for the Financial Services Industry: Key Agreement and Key"
+  },
+  "table_of_contents": [
+    [
+      "2.2.1",
+      "Hardware of the TOE",
+      25
+    ],
+    [
+      "2.2.2",
+      "Firmware and Software of the TOE",
+      26
+    ],
+    [
+      "2.2.3",
+      "Interfaces of the TOE",
+      28
+    ],
+    [
+      "2.2.4",
+      "Guidance Documentation",
+      29
+    ],
+    [
+      "2.2.5",
+      "Forms of Delivery",
+      30
+    ],
+    [
+      "2.2.6",
+      "Production Sites",
+      33
+    ],
+    [
+      "3.4.1",
+      "Security Problem Definition:",
+      35
+    ],
+    [
+      "3.4.2",
+      "Security Objectives",
+      35
+    ],
+    [
+      "3.4.3",
+      "Summary",
+      35
+    ],
+    [
+      "4.1.1",
+      "Additional Threat due to TOE Specific Functionality",
+      37
+    ],
+    [
+      "4.1.2",
+      "Assets Regarding the Threats",
+      38
+    ],
+    [
+      "4.2.1",
+      "Augmented Organizational Security Policy",
+      39
+    ],
+    [
+      "4.3.1",
+      "Augmented Assumptions",
+      41
+    ],
+    [
+      "5.2.1",
+      "Clarification of “Usage of Hardware Platform (OE.Plat-Appl)”",
+      44
+    ],
+    [
+      "5.2.2",
+      "Clarification of “Treatment of User Data (OE.Resp-Appl)”",
+      44
+    ],
+    [
+      "5.2.3",
+      "Clarification of “Protection during composite product manufacturing (OE.Process-Sec-IC)”",
+      44
+    ],
+    [
+      "6.2.1",
+      "TSF Self-Test (FPT_TST)",
+      48
+    ],
+    [
+      "7.1.2",
+      "Subset of TOE Testing",
+      52
+    ],
+    [
+      "7.1.3",
+      "Memory Access Control",
+      52
+    ],
+    [
+      "7.1.4",
+      "Support of Cipher Schemes",
+      55
+    ],
+    [
+      "7.1.5",
+      "Data Integrity",
+      74
+    ],
+    [
+      "7.2.1",
+      "Refinements",
+      77
+    ],
+    [
+      "7.2.2",
+      "ADV_SPM Formal Security Policy Model:",
+      79
+    ],
+    [
+      "7.3.1",
+      "Rationale for the Security Functional Requirements",
+      80
+    ],
+    [
+      "7.3.2",
+      "Rationale of the Assurance Requirements",
+      87
+    ],
+    [
+      "8.5.4",
+      "Elliptic Curves EC",
+      96
+    ],
+    [
+      "8.5.5",
+      "SHA-2",
+      98
+    ],
+    [
+      "8.5.6",
+      "PTRNG Respectively TRNG",
+      98
+    ],
+    [
+      "8.5.7",
+      "Summary of SF_CS: Cryptographic Support",
+      99
+    ]
+  ],
+  "revisions": [
+    {
+      "version": "1.0",
+      "date": "2017-01-27",
+      "description": "Initial version."
+    },
+    {
+      "version": "4.1",
+      "date": "2020-10-21",
+      "description": "final version"
+    }
+  ]
+}
