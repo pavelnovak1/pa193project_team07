@@ -29,7 +29,7 @@ pub fn find_table_of_content(text: &String) -> Vec<LineOfContents> {
         section = find_lines(&mut table_section, simple_line_regex.clone());
         parse_lines(&mut res, simple_line_regex, &mut section);
     } else {
-        section = find_lines(&mut table_section, no_dots_line_regex.clone());
+        section = find_lines(&mut table_section, no_dots_line_regex);
         parse_lines(&mut res, simple_line_regex, &mut section);
     }
     res
